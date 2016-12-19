@@ -46,9 +46,13 @@ var errorConsultaAjax = '<div class="consulta_error">' +
 function recargarPagina() {
     jQuery('#spinner_comentarios').show();
     jQuery('.consulta_error').remove();
-    var consultaPorDefecto = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC LIMIT 20";
-    consultaAnterior =  consultaPorDefecto;
-    peticionAjaxComentarios(consultaPorDefecto, false);
+
+    filtrosDesplegados = false;
+    consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC ";
+    numeroPagina = 1;
+    estaPidiendo = false;
+    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + ", 10";
+    peticionAjaxComentarios(consulta, false);
 }
 
 jQuery('#siguiendo').click(function (){
