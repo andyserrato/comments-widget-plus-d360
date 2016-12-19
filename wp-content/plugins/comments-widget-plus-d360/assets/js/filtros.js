@@ -29,6 +29,27 @@ var plantillaComentario = '<div class="card-1">' +
 
                  '<div class="separator"></div>';
 
+var noHayComentarios =  '<div class="consulta_error">' +
+                            '<div class="separator"></div>' +
+                            '<div class="mensaje_consulta_error">No existen comentarios con los criterios utilizados</div>' +
+                            '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Volver a los comentarios</button></div>' +
+                            '<div class="separator"></div>' +
+                        '</div>';
+
+var errorConsultaAjax = '<div class="consulta_error">' +
+                            '<div class="separator"></div>' +
+                            '<div class="mensaje_consulta_error">Oops! ha ocurrido un error en la consulta</div>' +
+                            '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Recargar Página</button></div>' +
+                            '<div class="separator"></div>' +
+                        '</div>';
+
+function recargarPagina() {
+    jQuery('#spinner_comentarios').show();
+    jQuery('.consulta_error').remove();
+    var consultaPorDefecto = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC LIMIT 20";
+    consultaAnterior =  consultaPorDefecto;
+    peticionAjaxComentarios(consultaPorDefecto, false);
+}
 
 jQuery('#siguiendo').click(function (){
     jQuery('#no_siguiendo').prop('checked', false);
@@ -191,6 +212,9 @@ jQuery("#filtro_followers").click(function(){
 function setButtonListener(){
     jQuery('#boton_submit').click(function () {
         jQuery('#contenedor_filtros').hide();
+        jQuery('#spinner_comentarios').show();
+        jQuery('#contenido').hide();
+
         jQuery('#boton_filtrar').css('background-color', "transparent");
 
         filtrosDesplegados = false;
@@ -281,7 +305,7 @@ function setButtonListener(){
 
         consultaAnterior = consulta;
         //alert(consulta);
-        consulta += " LIMIT 10;";
+        consulta += " LIMIT 20;";
 
         console.log(consulta);
 
@@ -345,56 +369,66 @@ function peticionAjaxComentarios(consulta, paginacion){
             commentsHTML = "";
             //alert(result);
             console.log(comments);
+            // si tenemos resultados
+            if (typeof comments !== 'undefined' && comments.length > 0) {
+                for (i = 0 ; i < comments.length ; i++ ) {
+                    //alert(comment.comment_ID);
+                    nuevoComentario = plantillaComentario;
+                    //Sustituimos los valores de la plantilla por el contenido
+                    contenido = "";
 
-            for (i = 0 ; i < comments.length ; i++ ) {
-                //alert(comment.comment_ID);
-                nuevoComentario = plantillaComentario;
-                //Sustituimos los valores de la plantilla por el contenido
-                contenido = "";
+                    if (comments[i].contenido.length > 250){
+                        contenido = comments[i].contenido.substr(0, 250) + "...";
+                    }else{
+                        contenido = comments[i].contenido;
+                    }
 
-                if (comments[i].contenido.length > 250){
-                    contenido = comments[i].contenido.substr(0, 250) + "...";
-                }else{
-                    contenido = comments[i].contenido;
+                    nuevoComentario = nuevoComentario.replace("TITULO", comments[i].titulo);
+                    nuevoComentario = nuevoComentario.replace("CONTENIDO_COMENTARIO", contenido);
+                    nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO", numeroComentario);
+                    nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO2", numeroComentario);
+                    nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO3", numeroComentario);
+
+                    nuevoComentario = nuevoComentario.replace("AVATAR", comments[i].avatar);
+                    nuevoComentario = nuevoComentario.replace("ENLACE", comments[i].enlace);
+                    nuevoComentario = nuevoComentario.replace("ENLACE_FACEBOOK", comments[i].enlace_facebook);
+                    nuevoComentario = nuevoComentario.replace("ENLACE_TWITTER", comments[i].enlace_twitter);
+                    nuevoComentario = nuevoComentario.replace("HREFAUTOR", comments[i].enlace_autor);
+                    nuevoComentario = nuevoComentario.replace("CATEGORIA", comments[i].categoria_sin_acentos);
+
+                    commentsHTML += nuevoComentario;
+                    //Anyadimos el comentario al array de comentarios
+                    comentarios.push(comments[i].contenido);
+                    console.log("anyado");
+
+                    numeroComentario++;
+                    //console.log(comentarios);
                 }
 
-                nuevoComentario = nuevoComentario.replace("TITULO", comments[i].titulo);
-                nuevoComentario = nuevoComentario.replace("CONTENIDO_COMENTARIO", contenido);
-                nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO", numeroComentario);
-                nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO2", numeroComentario);
-                nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO3", numeroComentario);
 
-                nuevoComentario = nuevoComentario.replace("AVATAR", comments[i].avatar);
-                nuevoComentario = nuevoComentario.replace("ENLACE", comments[i].enlace);
-                nuevoComentario = nuevoComentario.replace("ENLACE_FACEBOOK", comments[i].enlace_facebook);
-                nuevoComentario = nuevoComentario.replace("ENLACE_TWITTER", comments[i].enlace_twitter);
-                nuevoComentario = nuevoComentario.replace("HREFAUTOR", comments[i].enlace_autor);
-                nuevoComentario = nuevoComentario.replace("CATEGORIA", comments[i].categoria_sin_acentos);
+                if (paginacion) {
+                    jQuery('#contenido').html(jQuery('#contenido').html() + commentsHTML);
+                }else {
+                    jQuery('#contenido').html(commentsHTML);
+                }
 
-                commentsHTML += nuevoComentario;
-                //Anyadimos el comentario al array de comentarios
-                comentarios.push(comments[i].contenido);
-                console.log("anyado");
+                jQuery('.avatar2 img').removeClass();
+                jQuery('.avatar2 img').addClass("avatar");
 
-                numeroComentario++;
-                //console.log(comentarios);
+                estaPidiendo = false;
+                jQuery('#spinner_comentarios').hide();
+                jQuery('#contenido').show();
+
+                numeroPagina++;
+                console.log(consulta);
+            } else { // no hay resultados
+                estaPidiendo = false;
+                jQuery('#contenido').html(noHayComentarios);
+                jQuery('#spinner_comentarios').hide();
+                jQuery('#contenido').show();
             }
 
 
-            if (paginacion) {
-                jQuery('#contenido').html(jQuery('#contenido').html() + commentsHTML);
-            }else {
-                jQuery('#contenido').html(commentsHTML);
-            }
-
-            jQuery('.avatar2 img').removeClass();
-            jQuery('.avatar2 img').addClass("avatar");
-
-            estaPidiendo = false;
-            jQuery('#spinner_comentarios').hide();
-
-            numeroPagina++;
-            console.log(consulta);
         },
 
         // código a ejecutar si la petición falla;
@@ -402,7 +436,9 @@ function peticionAjaxComentarios(consulta, paginacion){
         // el objeto de la petición en crudo y código de estatus de la petición
         error : function(xhr, status) {
             estaPidiendo = false;
-            alert('Disculpe, existió un problema');
+            jQuery('#contenido').html(errorConsultaAjax);
+            jQuery('#spinner_comentarios').hide();
+            jQuery('#contenido').show();
         }
     });
 
