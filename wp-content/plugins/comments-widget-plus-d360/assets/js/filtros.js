@@ -3,6 +3,7 @@ var botonSubmitFiltros = '<div width="100%" id="container_boton_submit"><button 
 var consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC ";
 var numeroPagina = 1;
 var estaPidiendo = false;
+var existenComentarios = true;
 numeroComentario = 10;
 
 var plantillaComentario = '<div class="card-1">' +
@@ -32,11 +33,11 @@ var plantillaComentario = '<div class="card-1">' +
 var noHayComentarios =  '<div class="consulta_error">' +
                             '<div class="separator"></div>' +
                             '<div class="mensaje_consulta_error">No existen comentarios con los criterios utilizados</div>' +
-                            '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Volver a los comentarios</button></div>' +
+                            '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Volver a Comentarios</button></div>' +
                             '<div class="separator"></div>' +
                         '</div>';
 
-var errorConsultaAjax = '<div class="consulta_error">' +
+var errorConsultaAjax = '<div class="consulta_error" style="width: 100%; display: inline-block">' +
                             '<div class="separator"></div>' +
                             '<div class="mensaje_consulta_error">Oops! ha ocurrido un error en la consulta</div>' +
                             '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Recargar Página</button></div>' +
@@ -134,12 +135,24 @@ jQuery(document).ready( function (){
             scroll = jQuery(window).scrollTop();
             altoCuerpo = jQuery( '#contenido' ).height();
             console.log("evento scroll" + (altoCuerpo - scroll));
-        
-            if (altoCuerpo - scroll < 320){
+
+            if (altoCuerpo - scroll < 320 && existenComentarios){
                 //Aqui cargamos mas comentarios
                 getMoreComments();
             }
-        }   
+        }
+
+       /* jQuery(window).scroll(function() {
+            if (jQuery(window).scrollTop() > jQuery('#cwp_sticky').offset().top) {
+                jQuery('#cwp_sticky').stop().animate({
+                    marginTop: jQuery(window).scrollTop() - jQuery('#cwp_sticky').offset().top + 15
+                });
+            } else {
+                jQuery('#cwp_sticky').stop().animate({
+                    marginTop: 0
+                });
+            }
+        });*/
    });
 
 });
@@ -375,6 +388,7 @@ function peticionAjaxComentarios(consulta, paginacion){
             console.log(comments);
             // si tenemos resultados
             if (typeof comments !== 'undefined' && comments.length > 0) {
+                existenComentarios = true;
                 for (i = 0 ; i < comments.length ; i++ ) {
                     //alert(comment.comment_ID);
                     nuevoComentario = plantillaComentario;
@@ -427,6 +441,7 @@ function peticionAjaxComentarios(consulta, paginacion){
                 console.log(consulta);
             } else { // no hay resultados
                 estaPidiendo = false;
+                existenComentarios = false;
                 jQuery('#contenido').html(noHayComentarios);
                 jQuery('#spinner_comentarios').hide();
                 jQuery('#contenido').show();

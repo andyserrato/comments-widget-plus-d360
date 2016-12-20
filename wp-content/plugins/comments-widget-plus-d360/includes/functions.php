@@ -89,7 +89,7 @@ function cwp_get_recent_comments( $args, $id ) {
     }
 
 
-    $html .= '<div style="margin-top:10px;"><div style="text-align:center"><div id="boton_filtrar">
+    $html .= '<div style="margin-top:10px;"><div id="cwp_sticky" style="text-align:center" ><div id="boton_filtrar">
                                         <i class="fa fa-filter" aria-hidden="true"> FILTRAR</i>
                                         </div></div>
                 <div id="contenedor_filtros">';
@@ -158,7 +158,7 @@ function cwp_get_recent_comments( $args, $id ) {
     }
 
     $html .= '</div><div id="spinner_comentarios" style="width: 100%; text-align:center; display:none; margin-top: 30px"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>';
-
+    $html .= '<a href="#top" title="Desplazarse hacia arriba" id="cwp-scroll-top-link" aria-hidden="true" data-av_icon="" data-av_iconfont="entypo-fontello" class="cwp_avia_pop_class"><span class="avia_hidden_link_text">Desplazarse hacia arriba</span></a>';
 	// Allow devs to hook in stuff after the recent comments.
 	do_action( 'cwp_after_loop_' . $id );
 
