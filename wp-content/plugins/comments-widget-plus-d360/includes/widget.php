@@ -175,7 +175,7 @@ class Comments_Widget_Plus_Widget_D360 extends WP_Widget {
 		extract( $instance );
 
 		// Loads the widget form.
-		include( CWP_INCLUDES . 'form.php' );
+		include( CWP_360_INCLUDES . 'form.php' );
 
 	}
 

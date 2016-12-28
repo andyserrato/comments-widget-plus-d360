@@ -47,8 +47,8 @@ function cwp_get_recent_comments( $args, $id ) {
 	// Allow devs to hook in stuff before the recent comments.
 	do_action( 'cwp_before_loop_' . $id );
 
-    wp_enqueue_style( 'estilos', trailingslashit( CWP_ASSETS ) . 'css/estilos.css' );
-    wp_enqueue_script( 'filtros-script', trailingslashit( CWP_ASSETS ) . 'js/filtros.js' , array ( 'jquery' ), 1.5, true);
+    wp_enqueue_style( 'estilos', trailingslashit( CWP_360_ASSETS ) . 'css/estilos.css' );
+    wp_enqueue_script( 'filtros-script', trailingslashit( CWP_360_ASSETS ) . 'js/filtros.js' , array ( 'jquery' ), 1.5, true);
     wp_localize_script( 'filtros-script', 'MyAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
     // declare the URL to the file that handles the AJAX request
 

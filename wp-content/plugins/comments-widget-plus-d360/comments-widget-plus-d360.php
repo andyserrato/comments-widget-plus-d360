@@ -31,7 +31,7 @@ if ( ! class_exists( 'Comments_Widget_Plus_D360' ) ) {
 			add_action( 'plugins_loaded', array( &$this, 'constants' ), 1 );
 
 			// Internationalize the text strings used.
-			add_action( 'plugins_loaded', array( &$this, 'i18n' ), 2 );
+			//add_action( 'plugins_loaded', array( &$this, 'i18n' ), 2 );
 
 			// Load the functions files.
 			add_action( 'plugins_loaded', array( &$this, 'includes' ), 3 );
@@ -53,16 +53,16 @@ if ( ! class_exists( 'Comments_Widget_Plus_D360' ) ) {
 		public function constants() {
 
 			// Set constant path to the plugin directory.
-			define( 'CWP_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
+			define( 'CWP_360_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 			// Set the constant path to the plugin directory URI.
-			define( 'CWP_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+			define( 'CWP_360_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 			// Set the constant path to the includes directory.
-			define( 'CWP_INCLUDES', CWP_DIR . trailingslashit( 'includes' ) );
+			define( 'CWP_360_INCLUDES', CWP_360_DIR . trailingslashit( 'includes' ) );
 
 			// Set the constant path to the assets directory.
-			define( 'CWP_ASSETS', CWP_URI . trailingslashit( 'assets' ) );
+			define( 'CWP_360_ASSETS', CWP_360_URI . trailingslashit( 'assets' ) );
 
 		}
 
@@ -71,9 +71,9 @@ if ( ! class_exists( 'Comments_Widget_Plus_D360' ) ) {
 		 *
 		 * @since  1.0.0
 		 */
-		public function i18n() {
-			load_plugin_textdomain( 'comments-widget-plus', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-		}
+		//public function i18n() {
+		//	load_plugin_textdomain( 'comments-widget-plus', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		//}
 
 		/**
 		 * Loads the initial files needed by the plugin.
@@ -81,9 +81,9 @@ if ( ! class_exists( 'Comments_Widget_Plus_D360' ) ) {
 		 * @since  1.0.0
 		 */
 		public function includes() {
-			require_once( CWP_INCLUDES . 'functions.php' );
-			require_once( CWP_INCLUDES . 'widget.php' );
-            require_once( CWP_INCLUDES . 'Comentario.php' );
+			require_once( CWP_360_INCLUDES . 'functions.php' );
+			require_once( CWP_360_INCLUDES . 'widget.php' );
+            require_once( CWP_360_INCLUDES . 'Comentario.php' );
 		}
 
 		/**
@@ -101,8 +101,8 @@ if ( ! class_exists( 'Comments_Widget_Plus_D360' ) ) {
 		 * @since  1.0.0
 		 */
 		public function admin_scripts() {
-			wp_enqueue_style( 'cwp-admin-style', trailingslashit( CWP_ASSETS ) . 'css/cwp-admin.css' );
-			wp_enqueue_script( 'cwp-admin-script', trailingslashit( CWP_ASSETS ) . 'js/cwp-admin.js', array( 'jquery-ui-tabs' ) );
+			wp_enqueue_style( 'cwp-admin-style', trailingslashit( CWP_360_ASSETS ) . 'css/cwp-admin.css' );
+			wp_enqueue_script( 'cwp-admin-script', trailingslashit( CWP_360_ASSETS ) . 'js/cwp-admin.js', array( 'jquery-ui-tabs' ) );
 		}
 
 	}
