@@ -35,8 +35,8 @@ class Comments_Widget_Plus_Widget_D360 extends WP_Widget {
 
 		// Inline default style
 		if ( is_active_widget( false, false, $this->id_base ) ) {
-			add_action( 'wp_head', array( $this, 'cwp_style' ) );
-            add_action( 'wp_head', array( $this,'cwp_ajax_url'));
+			add_action( 'wp_head', array( $this, 'cwp_360_style' ) );
+            //add_action( 'wp_head', array( $this,'cwp_360_ajax_url'));
 		}
 
 		// Flush cache
@@ -48,18 +48,18 @@ class Comments_Widget_Plus_Widget_D360 extends WP_Widget {
 	/**
  * Default style
  */
-    public function cwp_style() {
+    public function cwp_360_style() {
         /**
          * Filter the default widget styles.
          */
-        if ( ! current_theme_supports( 'widgets' ) || ! apply_filters( 'cwp_use_default_style', true, $this->id_base ) )
+        if ( ! current_theme_supports( 'widgets' ) || ! apply_filters( 'cwp_360_use_default_style', true, $this->id_base ) )
             return;
         ?>
-        <style type="text/css">.cwp-li {overflow: hidden;}.cwp-avatar {float: left;margin-top: .2em;margin-right: 1em;}.cwp-avatar.rounded .avatar{border-radius:50%;}.cwp-avatar.square .avatar{border-radius:0;}.cwp-comment-excerpt {display: block;color:#787878;}</style>
+        <style type="text/css">.cwp-360-li {overflow: hidden;}.cwp-360-avatar {float: left;margin-top: .2em;margin-right: 1em;}.cwp-360-avatar.rounded .avatar{border-radius:50%;}.cwp-360-avatar.square .avatar{border-radius:0;}.cwp-360-comment-excerpt {display: block;color:#787878;}</style>
         <?php
     }
 
-    public function cwp_ajax_url () {
+    public function cwp_360_ajax_url () {
         ?>
         <script type="text/javascript">
             var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
@@ -99,7 +99,7 @@ class Comments_Widget_Plus_Widget_D360 extends WP_Widget {
 		}
 
 		// Get the recent comments.
-		$comments = cwp_get_recent_comments( $instance, $this->id );
+		$comments = cwp_360_get_recent_comments( $instance, $this->id );
 
 		// Check if comments exist
 		if ( $comments ) {
@@ -169,7 +169,7 @@ class Comments_Widget_Plus_Widget_D360 extends WP_Widget {
 	function form( $instance ) {
 
 		// Merge the user-selected arguments with the defaults.
-		$instance = wp_parse_args( (array) $instance, cwp_get_default_args() );
+		$instance = wp_parse_args( (array) $instance, cwp_360_get_default_args() );
 
 		// Extract the array to allow easy use of variables.
 		extract( $instance );

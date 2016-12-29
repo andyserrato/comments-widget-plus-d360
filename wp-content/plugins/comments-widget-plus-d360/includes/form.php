@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		// Cache selector in a variable
 		// to improve speed.
-		var $tabs = $( ".cwp-form-tabs" );
+		var $tabs = $( ".cwp-360-form-tabs" );
 
 		// Initialize the jQuery UI tabs
 		$tabs.tabs({
@@ -25,14 +25,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		}).addClass( "ui-tabs-vertical" );
 
 		// Add custom class
-		$tabs.closest( ".widget-inside" ).addClass( "cwp-bg" );
+		$tabs.closest( ".widget-inside" ).addClass( "cwp-360-bg" );
 
 	});
 </script>
 
-<div class="cwp-form-tabs">
+<div class="cwp-360-form-tabs">
 
-	<ul class="cwp-tabs">
+	<ul class="cwp-360-tabs">
 		<li><a href="#tab-1"><?php _e( 'General', 'comments-widget-plus' ); ?></a></li>
 		<li><a href="#tab-2"><?php _e( 'Comments', 'comments-widget-plus' ); ?></a></li>
 		<li><a href="#tab-3"><?php _e( 'Avatar', 'comments-widget-plus' ); ?></a></li>
@@ -40,9 +40,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		<li><a href="#tab-5"><?php _e( 'Categories', 'comments-widget-plus' ); ?></a></li>
 	</ul>
 
-	<div class="cwp-tabs-content">
+	<div class="cwp-360-tabs-content">
 
-		<div id="tab-1" class="cwp-tab-content">
+		<div id="tab-1" class="cwp-360-tab-content">
 			<p>
 				<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 					<?php _e( 'Title', 'comments-widget-plus' ); ?>
@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		</div><!-- #tab-1 -->
 
-		<div id="tab-2" class="cwp-tab-content">
+		<div id="tab-2" class="cwp-360-tab-content">
 
 			<p>
 				<label for="<?php echo $this->get_field_id( 'post_type' ); ?>">
@@ -114,7 +114,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		</div><!-- #tab-2 -->
 
-		<div id="tab-3" class="cwp-tab-content">
+		<div id="tab-3" class="cwp-360-tab-content">
 
 			<p>
 				<input class="checkbox" type="checkbox" <?php checked( $instance['avatar'], 1 ); ?> id="<?php echo $this->get_field_id( 'avatar' ); ?>" name="<?php echo $this->get_field_name( 'avatar' ); ?>" />
@@ -142,7 +142,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		</div><!-- #tab-3 -->
 
-		<div id="tab-4" class="cwp-tab-content">
+		<div id="tab-4" class="cwp-360-tab-content">
 
 			<p>
 				<input id="<?php echo $this->get_field_id( 'excerpt' ); ?>" name="<?php echo $this->get_field_name( 'excerpt' ); ?>" type="checkbox" <?php checked( $instance['excerpt'] ); ?> />
@@ -160,7 +160,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		</div><!-- #tab-4 -->
 
-		<div id="tab-5" class="cwp-tab-content">
+		<div id="tab-5" class="cwp-360-tab-content">
 			<?php
 			$categ = get_categories();
 			foreach($categ as $id => $item) :
@@ -184,4 +184,4 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	</div>
 
 
-</div><!-- .cwp-form-tabs -->
+</div><!-- .cwp-360-form-tabs -->

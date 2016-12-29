@@ -1,0 +1,56 @@
+.cwp-360-bg {
+	background-color: #f3f3f3;
+}
+
+.cwp-360-bg .widget-control-actions {
+	clear: both;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .ui-tabs-nav {
+	float: left;
+	width: 8em;
+	padding: 1em 0;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .ui-tabs-nav li {
+	clear: left;
+	width: 100%;
+	margin-bottom: 0;
+	padding: .8em 0 .8em 1em;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .ui-tabs-nav li.ui-state-focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .ui-tabs-nav li a {
+	display: block;
+	text-decoration: none;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .ui-tabs-nav li a:focus {
+	box-shadow: none;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active {
+	background-color: #fff;
+}
+
+.cwp-360-form-tabs.ui-tabs-vertical .cwp-360-tabs-content {
+	overflow: hidden;
+	min-height: 12em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding: 1em 1.5em 1em 1.5em;
+	background-color: #fff;
+}
+
+.cwp-360-tab-content p {
+	margin-bottom: 1.5em;
+}
+
+.cwp-360-tab-content p small {
+	font-style: italic;
+	color: #777;
+}

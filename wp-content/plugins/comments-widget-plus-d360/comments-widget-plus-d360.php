@@ -101,7 +101,7 @@ if ( ! class_exists( 'Comments_Widget_Plus_D360' ) ) {
 		 * @since  1.0.0
 		 */
 		public function admin_scripts() {
-			wp_enqueue_style( 'cwp-admin-style', trailingslashit( CWP_360_ASSETS ) . 'css/cwp-admin.css' );
+			wp_enqueue_style( 'cwp-admin-style', trailingslashit( CWP_360_ASSETS ) . 'css/cwp-360-admin.css' );
 			wp_enqueue_script( 'cwp-admin-script', trailingslashit( CWP_360_ASSETS ) . 'js/cwp-admin.js', array( 'jquery-ui-tabs' ) );
 		}
 

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Sets up the default arguments.
  */
-function cwp_get_default_args() {
+function cwp_360_get_default_args() {
 
 	$defaults = array(
 		'title'         => esc_attr__( 'Recent Comments', 'comments-widget-plus-d360' ),
@@ -29,23 +29,23 @@ function cwp_get_default_args() {
 	);
 
 	// Allow plugins/themes developer to filter the default arguments.
-	return apply_filters( 'cwp_default_args', $defaults );
+	return apply_filters( 'cwp_360_default_args', $defaults );
 
 }
 
 /**
  * Generates the recent comments markup.
  */
-function cwp_get_recent_comments( $args, $id ) {
+function cwp_360_get_recent_comments( $args, $id ) {
 
 	// Merge the input arguments and the defaults.
-	$args = wp_parse_args( $args, cwp_get_default_args() );
+	$args = wp_parse_args( $args, cwp_360_get_default_args() );
 
 	// Extract the array to allow easy use of variables.
 	extract( $args );
 
 	// Allow devs to hook in stuff before the recent comments.
-	do_action( 'cwp_before_loop_' . $id );
+	do_action( 'cwp_360_before_loop_' . $id );
 
     wp_enqueue_style( 'estilos', trailingslashit( CWP_360_ASSETS ) . 'css/estilos.css' );
     wp_enqueue_script( 'filtros-script', trailingslashit( CWP_360_ASSETS ) . 'js/filtros.js' , array ( 'jquery' ), 1.5, true);
@@ -66,7 +66,7 @@ function cwp_get_recent_comments( $args, $id ) {
 
     //Comentarios iniciales
     global $wpdb;
-    $consulta = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC LIMIT 10";
+    $consulta = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC LIMIT 20";
     $comentarios = $wpdb->get_results($consulta);
 
     $html = '';
@@ -170,7 +170,7 @@ function cwp_get_recent_comments( $args, $id ) {
 /**
  * The recent comments query.
  */
-function cwp_get_comments( $args, $id ) {
+function cwp_360_get_comments( $args, $id ) {
 	// Arguments
 	$query = array(
 		'number'      => $args['limit'],
@@ -186,7 +186,7 @@ function cwp_get_comments( $args, $id ) {
 	}
 
 	// Allow plugins/themes developer to filter the default comment query.
-	$query = apply_filters( 'cwp_comments_args_' . $id, $query );
+	$query = apply_filters( 'cwp_360_comments_args_' . $id, $query );
 
 	// Get the comments.
 	$comments = get_comments( $query );
@@ -212,9 +212,9 @@ function getLinkTwitterShare($comentario){
 
 }
 
-add_action( 'wp_ajax_nopriv_cwp_get_comments_ajax', 'cwp_get_comments_ajax' );
-add_action( 'wp_ajax_cwp_get_comments_ajax', 'cwp_get_comments_ajax' );
-function cwp_get_comments_ajax()
+add_action( 'wp_ajax_nopriv_cwp_360_get_comments_ajax', 'cwp_360_get_comments_ajax' );
+add_action( 'wp_ajax_cwp_360_get_comments_ajax', 'cwp_360_get_comments_ajax' );
+function cwp_360_get_comments_ajax()
 {
 
     global $wpdb;

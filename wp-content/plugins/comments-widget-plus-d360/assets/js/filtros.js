@@ -1,6 +1,6 @@
 var filtrosDesplegados = false;
 var botonSubmitFiltros = '<div width="100%" id="container_boton_submit"><button id="boton_submit" type="button">BUSCAR</button></div>';
-var consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC ";
+var consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id";
 var numeroPagina = 1;
 var estaPidiendo = false;
 var existenComentarios = true;
@@ -45,14 +45,15 @@ var errorConsultaAjax = '<div class="consulta_error" style="width: 100%; display
                         '</div>';
 
 function recargarPagina() {
+    jQuery('#boton_filtrar').hide();
     jQuery('#spinner_comentarios').show();
     jQuery('.consulta_error').remove();
 
     filtrosDesplegados = false;
-    consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id ORDER BY num_votos DESC ";
+    consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC ";
     numeroPagina = 1;
     estaPidiendo = false;
-    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + ", 10";
+    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + "20";
     peticionAjaxComentarios(consulta, false);
 }
 
@@ -108,8 +109,8 @@ jQuery(document).ready( function (){
 
     filtros +=  '</div><div id="filtro_temporalidad_contenido" style="display:none">' +
                                         '<select id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
-                                            '<option selected="selected" value="1">Los más recientes</option>' +
-                                            '<option value="2">De la última semana</option>' +
+                                            '<option value="1">Los más recientes</option>' +
+                                            '<option selected="selected" value="2">De la última semana</option>' +
                                             '<option value="3">Del último mes</option>' +
                                             '<option value="4">De los últimos 6 meses</option>' +
                                             '<option value="5">Del último año</option>' +
@@ -117,7 +118,7 @@ jQuery(document).ready( function (){
                                         '</select>' +
                                     '</div>' +
                                     '<div id="filtro_votos_contenido" style="display:none">' +
-                                        '<input class="checkbox_general" checked="checked" id="mas_votados" type="checkbox"/>Más votados' +
+                                        '<input class="checkbox_general" id="mas_votados" type="checkbox"/>Más votados' +
                                         '<input class="checkbox_general" id="menos_votados" type="checkbox"/>Menos votados' +
                                     '</div>'+
                                     '<div id="filtro_followers_contenido" style="display:none">' +
@@ -160,7 +161,7 @@ jQuery(document).ready( function (){
 
 
 function getMoreComments(){
-    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + ", 10";
+    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + ", 20";
     console.log("Pagina:" + numeroPagina);
 
     if (!estaPidiendo) {
@@ -229,6 +230,7 @@ jQuery("#filtro_followers").click(function(){
 function setButtonListener(){
     jQuery('#boton_submit').click(function () {
         jQuery('#contenedor_filtros').hide();
+        jQuery('#boton_filtrar').hide();
         jQuery('#spinner_comentarios').show();
         jQuery('#contenido').hide();
 
@@ -245,7 +247,8 @@ function setButtonListener(){
 
         //QUITAR
         temporalidad = jQuery('#temporalidad').prop('selectedIndex');
-        masVotado = true;
+        masVotado = false;
+        menosVotado = false;
         siguiendo = "nada";
 
         if (jQuery('#siguiendo').prop('checked'))
@@ -254,9 +257,13 @@ function setButtonListener(){
         if (jQuery('#no_siguiendo').prop('checked'))
             siguiendo = false;
 
-        if (jQuery('#menos_votados').prop('checked'))
-            masVotado = false;
+        if (jQuery('#menos_votados').prop('checked')) {
+            menosVotado = true;
+        }
 
+        if (jQuery('#mas_votados').prop('checked')) {
+            masVotado = true;
+        }
 
         console.log('Temporalidad:' + temporalidad);
         console.log('Siguendo:' + siguiendo);
@@ -314,10 +321,12 @@ function setButtonListener(){
 
         consulta += " AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id";
 
-        if (masVotado){
-            consulta += " ORDER BY num_votos DESC ";
-        }else{
-            consulta += " ORDER BY num_votos ASC ";
+        if (!(masVotado && menosVotado)) {
+            if (masVotado){
+                consulta += " ORDER BY num_votos DESC ";
+            } else {
+                consulta += " ORDER BY num_votos ASC ";
+            }
         }
 
         consultaAnterior = consulta;
@@ -370,7 +379,7 @@ function peticionAjaxComentarios(consulta, paginacion){
 
         // la información a enviars
         // (también es posible utilizar una cadena de datos)
-        data : { consulta: consulta, action : 'cwp_get_comments_ajax' },
+        data : { consulta: consulta, action : 'cwp_360_get_comments_ajax' },
 
         // especifica si será una petición POST o GET
         type : 'POST',
@@ -435,6 +444,7 @@ function peticionAjaxComentarios(consulta, paginacion){
 
                 estaPidiendo = false;
                 jQuery('#spinner_comentarios').hide();
+                jQuery('#boton_filtrar').show();
                 jQuery('#contenido').show();
 
                 numeroPagina++;
@@ -442,8 +452,15 @@ function peticionAjaxComentarios(consulta, paginacion){
             } else { // no hay resultados
                 estaPidiendo = false;
                 existenComentarios = false;
-                jQuery('#contenido').html(noHayComentarios);
+
+                if (paginacion) {
+                    jQuery('#contenido').html(jQuery('#contenido').html() + noHayComentarios);
+                }else {
+                    jQuery('#contenido').html(noHayComentarios);
+                }
+
                 jQuery('#spinner_comentarios').hide();
+                jQuery('#boton_filtrar').show();
                 jQuery('#contenido').show();
             }
 
@@ -457,6 +474,7 @@ function peticionAjaxComentarios(consulta, paginacion){
             estaPidiendo = false;
             jQuery('#contenido').html(errorConsultaAjax);
             jQuery('#spinner_comentarios').hide();
+            jQuery('#boton_filtrar').show();
             jQuery('#contenido').show();
         }
     });
