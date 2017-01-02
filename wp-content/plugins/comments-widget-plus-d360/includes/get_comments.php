@@ -29,6 +29,4 @@ include_once $path . '/wp-includes/pluggable.php';
     }
 
     echo json_encode($comentarios);
-
-    //echo urldecode($_POST['consulta']);
 ?>

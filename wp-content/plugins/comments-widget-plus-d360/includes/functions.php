@@ -49,7 +49,7 @@ function cwp_360_get_recent_comments( $args, $id ) {
 
     wp_enqueue_style( 'estilos', trailingslashit( CWP_360_ASSETS ) . 'css/estilos.css' );
     wp_enqueue_script( 'filtros-script', trailingslashit( CWP_360_ASSETS ) . 'js/filtros.js' , array ( 'jquery' ), 1.5, true);
-    wp_localize_script( 'filtros-script', 'MyAjax', array( 'ajaxurl' => '/wp-admin/admin-ajax.php' ) );
+    wp_localize_script( 'filtros-script', 'MyAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
     // declare the URL to the file that handles the AJAX request
 
     $categorias = get_categories();
@@ -66,10 +66,9 @@ function cwp_360_get_recent_comments( $args, $id ) {
 
     //Comentarios iniciales
     global $wpdb;
-    $consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC LIMIT 20";
+    $consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC LIMIT 20";
     
     $comentarios = $wpdb->get_results($consulta);
-
     $html = '';
 
     //Seteamos el user de wordpress en una variable de Javascript
@@ -215,12 +214,10 @@ function getLinkTwitterShare($comentario){
 
 add_action( 'wp_ajax_nopriv_cwp_360_get_comments_ajax', 'cwp_360_get_comments_ajax' );
 add_action( 'wp_ajax_cwp_360_get_comments_ajax', 'cwp_360_get_comments_ajax' );
-
 function cwp_360_get_comments_ajax()
 {
-
     global $wpdb;
-    $query = stripslashes($_POST['consulta']);
+    $query = stripslashes(urldecode($_POST['consulta']));
 
     $comments = $wpdb->get_results($query);
     $comentarios = array();
@@ -242,7 +239,7 @@ function cwp_360_get_comments_ajax()
         array_push($comentarios, $comentario);
     }
 
-    echo json_encode($comentarios);
+    wp_send_json($comentarios);
 
     wp_die();
 }

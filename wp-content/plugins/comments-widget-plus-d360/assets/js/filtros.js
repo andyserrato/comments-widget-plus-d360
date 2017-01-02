@@ -1,48 +1,48 @@
 var filtrosDesplegados = false;
 var botonSubmitFiltros = '<div width="100%" id="container_boton_submit"><button id="boton_submit" type="button">BUSCAR</button></div>';
-var consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC";
+var consultaAnterior = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
 var numeroPagina = 1;
 var estaPidiendo = false;
 var existenComentarios = true;
-numeroComentario = 10;
+numeroComentario = 20;
 
 var plantillaComentario = '<div class="card-1">' +
-                            '<div style="width: 100%; display: inline-block">' +
-                                '<div class="titulo">TITULO</div>' +
-                                '<div class="categoria">CATEGORIA</div>' +
-                            '</div>' +
-                    '<div>' +
-                        '<div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><a href="HREFAUTOR"><div class="avatar2">AVATAR</div></a></div>' +
-                        '<div id="contenido_NUMERO_COMENTARIO" onclick="desplegar(NUMERO_COMENTARIO3)" class="contenido">CONTENIDO_COMENTARIO</div>' +
-                    '</div>' +
+    '<div style="width: 100%; display: inline-block">' +
+    '<div class="titulo">TITULO</div>' +
+    '<div class="categoria">CATEGORIA</div>' +
+    '</div>' +
+    '<div>' +
+    '<div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><a href="HREFAUTOR"><div class="avatar2">AVATAR</div></a></div>' +
+    '<div id="contenido_NUMERO_COMENTARIO" onclick="desplegar(NUMERO_COMENTARIO3)" class="contenido">CONTENIDO_COMENTARIO</div>' +
+    '</div>' +
 
-                    '<div>' +
-                        '<div style="display:inline-block">' +
-                            '<div class="boton_social"><a target="_blank" href="ENLACE_FACEBOOK"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></div>' +
-                            '<div class="boton_social"><a target="_blank" href="ENLACE_TWITTER"><i class="fa fa-twitter" aria-hidden="true"></i></a></div>' +
-                        '</div>' +
-                        '<div class="botonera">' +
-                            '<div class="boton" onclick="desplegar(NUMERO_COMENTARIO2)"><a>Leer <i class="fa fa-plus" aria-hidden="true"></i></a></div>' +
-                            '<div class="boton"><a href="ENLACE">Continuarlo <i class="fa fa-commenting-o" aria-hidden="true"></i></a></div>' +
-                        '</div>' +
-                    '</div>' +
-                  '</div>' +
+    '<div>' +
+    '<div style="display:inline-block">' +
+    '<div class="boton_social"><a target="_blank" href="ENLACE_FACEBOOK"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></div>' +
+    '<div class="boton_social"><a target="_blank" href="ENLACE_TWITTER"><i class="fa fa-twitter" aria-hidden="true"></i></a></div>' +
+    '</div>' +
+    '<div class="botonera">' +
+    '<div class="boton" onclick="desplegar(NUMERO_COMENTARIO2)"><a>Leer <i class="fa fa-plus" aria-hidden="true"></i></a></div>' +
+    '<div class="boton"><a href="ENLACE">Continuarlo <i class="fa fa-commenting-o" aria-hidden="true"></i></a></div>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
 
-                 '<div class="separator"></div>';
+    '<div class="separator"></div>';
 
 var noHayComentarios =  '<div class="consulta_error">' +
-                            '<div class="separator"></div>' +
-                            '<div class="mensaje_consulta_error">No existen comentarios con los criterios utilizados</div>' +
-                            '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Volver a Comentarios</button></div>' +
-                            '<div class="separator"></div>' +
-                        '</div>';
+    '<div class="separator"></div>' +
+    '<div class="mensaje_consulta_error">No existen comentarios con los criterios utilizados</div>' +
+    '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Volver a Comentarios</button></div>' +
+    '<div class="separator"></div>' +
+    '</div>';
 
 var errorConsultaAjax = '<div class="consulta_error" style="width: 100%; display: inline-block">' +
-                            '<div class="separator"></div>' +
-                            '<div class="mensaje_consulta_error">Oops! ha ocurrido un error en la consulta</div>' +
-                            '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Recargar Página</button></div>' +
-                            '<div class="separator"></div>' +
-                        '</div>';
+    '<div class="separator"></div>' +
+    '<div class="mensaje_consulta_error">Oops! ha ocurrido un error en la consulta</div>' +
+    '<div width="100%" class="container_boton_consulta"><button id="boton_consulta_error" type="button" onclick="recargarPagina()">Recargar Página</button></div>' +
+    '<div class="separator"></div>' +
+    '</div>';
 
 function recargarPagina() {
     jQuery('#boton_filtrar').hide();
@@ -50,13 +50,13 @@ function recargarPagina() {
     jQuery('.consulta_error').remove();
 
     filtrosDesplegados = false;
-    consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC";
+    consultaAnterior = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 6 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
     numeroPagina = 1;
     estaPidiendo = false;
-    consulta = consultaAnterior + "LIMIT 20";
+    consulta = consultaAnterior + " LIMIT 20";
     console.log("recargarPagina");
     console.log(consulta);
-    peticionAjaxComentarios(consultaAnterior, false);
+    peticionAjaxComentarios(consulta, false);
 }
 
 jQuery('#siguiendo').click(function (){
@@ -110,23 +110,23 @@ jQuery(document).ready( function (){
 
 
     filtros +=  '</div><div id="filtro_temporalidad_contenido" style="display:none">' +
-                                        '<select id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
-                                            '<option selected="selected" value="1">Los más recientes</option>' +
-                                            '<option value="2">De la última semana</option>' +
-                                            '<option value="3">Del último mes</option>' +
-                                            '<option value="4">De los últimos 6 meses</option>' +
-                                            '<option value="5">Del último año</option>' +
-                                            '<option value="6">Todos</option>' +
-                                        '</select>' +
-                                    '</div>' +
-                                    '<div id="filtro_votos_contenido" style="display:none">' +
-                                        '<input class="checkbox_general" id="mas_votados" type="checkbox"/>Más votados' +
-                                        '<input class="checkbox_general" id="menos_votados" type="checkbox"/>Menos votados' +
-                                    '</div>'+
-                                    '<div id="filtro_followers_contenido" style="display:none">' +
-                                        '<input class="checkbox_general" id="siguiendo" type="checkbox"/>Siguiendo' +
-                                        '<input class="checkbox_general" id="no_siguiendo" type="checkbox"/>No Siguiendo' +
-                                    '</div>' + botonSubmitFiltros;
+        '<select id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
+        '<option selected="selected" value="1">Los más recientes</option>' +
+        '<option value="2">De la última semana</option>' +
+        '<option value="3">Del último mes</option>' +
+        '<option value="4">De los últimos 6 meses</option>' +
+        '<option value="5">Del último año</option>' +
+        '<option value="6">Todos</option>' +
+        '</select>' +
+        '</div>' +
+        '<div id="filtro_votos_contenido" style="display:none">' +
+        '<input class="checkbox_general" id="mas_votados" type="checkbox"/>Más votados' +
+        '<input class="checkbox_general" id="menos_votados" type="checkbox"/>Menos votados' +
+        '</div>'+
+        '<div id="filtro_followers_contenido" style="display:none">' +
+        '<input class="checkbox_general" id="siguiendo" type="checkbox"/>Siguiendo' +
+        '<input class="checkbox_general" id="no_siguiendo" type="checkbox"/>No Siguiendo' +
+        '</div>' + botonSubmitFiltros;
 
     jQuery('#filtros_contenido').html(filtros);
 
@@ -135,7 +135,7 @@ jQuery(document).ready( function (){
 
 
     jQuery(window).scroll(function() {
-       if(jQuery(window).scrollTop() > 0) {
+        if(jQuery(window).scrollTop() > 0) {
             scroll = jQuery(window).scrollTop();
             altoCuerpo = jQuery( '#contenido' ).height();
             console.log("evento scroll" + (altoCuerpo - scroll));
@@ -144,20 +144,21 @@ jQuery(document).ready( function (){
                 //Aqui cargamos mas comentarios
                 getMoreComments();
             }
-        } 
-   });
+        }
+    });
 
 });
 
 
 
 function getMoreComments(){
-    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + ", 20";
+    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 20) + ", 20";
     console.log("Pagina:" + numeroPagina);
 
     if (!estaPidiendo) {
         estaPidiendo = true;
         //Mostramos el spinner
+        console.log(consulta);
         jQuery('#spinner_comentarios').show();
         peticionAjaxComentarios(consulta, true);
     }
@@ -310,14 +311,14 @@ function setButtonListener(){
         }
 
 
-        consulta += " AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ";
+        consulta += " AND co.comment_approved = 1 AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ";
 
         if (masVotado){
             consulta += " ,num_votos DESC ";
         }else if (menosVotado){
             consulta += " ,num_votos ASC ";
-        }  
-        
+        }
+
 
         consultaAnterior = consulta;
         //alert(consulta);
@@ -363,8 +364,8 @@ function peticionAjaxComentarios(consulta, paginacion){
     console.log("pido");
     jQuery.ajax({
         // la URL para la petición
-        url : "../wp-content/plugins/comments-widget-plus-d360/includes/get_comments.php",
-
+        //url : "../wp-content/plugins/comments-widget-plus-d360/includes/get_comments.php",
+        url : MyAjax.ajaxurl,
         //ajaxurl+"?action=get_comments_ajax",
 
         // la información a enviars
