@@ -1,6 +1,6 @@
 var filtrosDesplegados = false;
 var botonSubmitFiltros = '<div width="100%" id="container_boton_submit"><button id="boton_submit" type="button">BUSCAR</button></div>';
-var consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id";
+var consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC";
 var numeroPagina = 1;
 var estaPidiendo = false;
 var existenComentarios = true;
@@ -50,28 +50,30 @@ function recargarPagina() {
     jQuery('.consulta_error').remove();
 
     filtrosDesplegados = false;
-    consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC ";
+    consultaAnterior = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR) AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id DESC";
     numeroPagina = 1;
     estaPidiendo = false;
-    consulta = consultaAnterior + " LIMIT " + (numeroPagina * 10) + "20";
-    peticionAjaxComentarios(consulta, false);
+    consulta = consultaAnterior + "LIMIT 20";
+    console.log("recargarPagina");
+    console.log(consulta);
+    peticionAjaxComentarios(consultaAnterior, false);
 }
 
 jQuery('#siguiendo').click(function (){
     jQuery('#no_siguiendo').prop('checked', false);
-});    
+});
 
 jQuery('#no_siguiendo').click(function (){
     jQuery('#siguiendo').prop('checked', false);
-});    
+});
 
 jQuery('#mas_votados').click(function (){
     jQuery('#menos_votados').prop('checked', false);
-});    
+});
 
 jQuery('#menos_votados').click(function (){
     jQuery('#mas_votados').prop('checked', false);
-});  
+});
 
 jQuery('#boton_filtrar').click(function (){
 
@@ -84,11 +86,11 @@ jQuery('#boton_filtrar').click(function (){
         jQuery('#boton_filtrar').css('background-color', "#f2f2f2");
         filtrosDesplegados = true;
     }
-}); 
+});
 
 jQuery('#boton_cerrar_filtros').click(function (){
     jQuery('#contenedor_filtros').hide();
-}); 
+});
 
 jQuery(document).ready( function (){
 
@@ -109,8 +111,8 @@ jQuery(document).ready( function (){
 
     filtros +=  '</div><div id="filtro_temporalidad_contenido" style="display:none">' +
                                         '<select id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
-                                            '<option value="1">Los más recientes</option>' +
-                                            '<option selected="selected" value="2">De la última semana</option>' +
+                                            '<option selected="selected" value="1">Los más recientes</option>' +
+                                            '<option value="2">De la última semana</option>' +
                                             '<option value="3">Del último mes</option>' +
                                             '<option value="4">De los últimos 6 meses</option>' +
                                             '<option value="5">Del último año</option>' +
@@ -131,6 +133,7 @@ jQuery(document).ready( function (){
     setButtonListener();
     setCheckboxCategoriasListeners();
 
+
     jQuery(window).scroll(function() {
        if(jQuery(window).scrollTop() > 0) {
             scroll = jQuery(window).scrollTop();
@@ -141,19 +144,7 @@ jQuery(document).ready( function (){
                 //Aqui cargamos mas comentarios
                 getMoreComments();
             }
-        }
-
-       /* jQuery(window).scroll(function() {
-            if (jQuery(window).scrollTop() > jQuery('#cwp_sticky').offset().top) {
-                jQuery('#cwp_sticky').stop().animate({
-                    marginTop: jQuery(window).scrollTop() - jQuery('#cwp_sticky').offset().top + 15
-                });
-            } else {
-                jQuery('#cwp_sticky').stop().animate({
-                    marginTop: 0
-                });
-            }
-        });*/
+        } 
    });
 
 });
@@ -270,12 +261,12 @@ function setButtonListener(){
         console.log('Mas votado:' + masVotado);
 
 
-        consulta = "select * from (select po.ID as post_id, co.comment_author_email as email, co.comment_author as autor,co.comment_ID, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE ";
+        consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE ";
 
         switch (temporalidad) {
             case 0:
                 //Ultimo día
-                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 1 DAY)";
+                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)";
                 break;
             case 1:
                 consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 7 DAY)";
@@ -319,15 +310,14 @@ function setButtonListener(){
         }
 
 
-        consulta += " AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ) tabla group by post_id";
+        consulta += " AND cm.meta_key = 'wpdiscuz_votes' ORDER BY co.comment_date DESC ";
 
-        if (!(masVotado && menosVotado)) {
-            if (masVotado){
-                consulta += " ORDER BY num_votos DESC ";
-            } else {
-                consulta += " ORDER BY num_votos ASC ";
-            }
-        }
+        if (masVotado){
+            consulta += " ,num_votos DESC ";
+        }else if (menosVotado){
+            consulta += " ,num_votos ASC ";
+        }  
+        
 
         consultaAnterior = consulta;
         //alert(consulta);
@@ -373,13 +363,13 @@ function peticionAjaxComentarios(consulta, paginacion){
     console.log("pido");
     jQuery.ajax({
         // la URL para la petición
-        url : MyAjax.ajaxurl,
+        url : "../wp-content/plugins/comments-widget-plus-d360/includes/get_comments.php",
 
         //ajaxurl+"?action=get_comments_ajax",
 
         // la información a enviars
         // (también es posible utilizar una cadena de datos)
-        data : { consulta: consulta, action : 'cwp_360_get_comments_ajax' },
+        data : { consulta: encodeURI(consulta), action : 'cwp_360_get_comments_ajax' },
 
         // especifica si será una petición POST o GET
         type : 'POST',
