@@ -1,6 +1,7 @@
 var filtrosDesplegados = false;
 var botonSubmitFiltros = '<div width="100%" id="container_boton_submit"><button id="boton_submit" type="button">BUSCAR</button></div>';
-var consultaAnterior = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
+//var consultaAnterior = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
+var consultaAnterior = "SELECT DISTINCT(co.comment_ID), po.ID AS post_id, co.comment_author_email AS email, co.comment_author AS autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date FROM wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID JOIN wp_term_relationships term_relationships ON po.ID = term_relationships.object_id JOIN wp_term_taxonomy term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
 var numeroPagina = 1;
 var estaPidiendo = false;
 var existenComentarios = true;
@@ -50,7 +51,8 @@ function recargarPagina() {
     jQuery('.consulta_error').remove();
 
     filtrosDesplegados = false;
-    consultaAnterior = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 6 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
+    //consultaAnterior = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 6 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
+    consultaAnterior = "SELECT DISTINCT(co.comment_ID), po.ID AS post_id, co.comment_author_email AS email, co.comment_author AS autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date FROM wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID JOIN wp_term_relationships term_relationships ON po.ID = term_relationships.object_id JOIN wp_term_taxonomy term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC";
     numeroPagina = 1;
     estaPidiendo = false;
     consulta = consultaAnterior + " LIMIT 20";
@@ -262,24 +264,24 @@ function setButtonListener(){
         console.log('Mas votado:' + masVotado);
 
 
-        consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE ";
-
+        //consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE 1 = 1 ";
+        consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID JOIN wp_term_relationships term_relationships ON po.ID = term_relationships.object_id JOIN wp_term_taxonomy term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id WHERE 1 = 1";
         switch (temporalidad) {
             case 0:
                 //Ultimo día
-                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+                consulta += " AND co.comment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)";
                 break;
             case 1:
-                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 7 DAY)";
+                consulta += " AND co.comment_date > DATE_SUB(NOW(), INTERVAL 7 DAY)";
                 break;
             case 2:
-                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+                consulta += " AND co.comment_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)";
                 break;
             case 3:
-                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 6 MONTH)";
+                consulta += " AND co.comment_date > DATE_SUB(NOW(), INTERVAL 6 MONTH)";
                 break;
             case 4:
-                consulta += "co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR)";
+                consulta += " AND co.comment_date > DATE_SUB(NOW(), INTERVAL 1 YEAR)";
                 break;
         }
 
@@ -307,7 +309,8 @@ function setButtonListener(){
         strCategorias += ")"
 
         if (strCategorias != ")") {
-            consulta += " AND pm.meta_value IN " + strCategorias;
+            //consulta += " AND pm.meta_value IN " + strCategorias;
+            consulta += " AND term_taxonomy.term_id IN " + strCategorias;
         }
 
 
