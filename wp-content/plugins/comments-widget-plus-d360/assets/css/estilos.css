@@ -223,3 +223,21 @@
         visibility: hidden;
     }
 }
+
+.trend-walls-commentarios {
+    font-size: 9px;
+}
+
+.trend-wall {
+    display: inline;
+    margin-right: 10px;
+}
+
+#trend-walls {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.trend-walls-enlace {
+    display: block;
+}

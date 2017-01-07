@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function cwp_360_get_default_args() {
 
 	$defaults = array(
-		'title'         => esc_attr__( 'Recent Comments', 'comments-widget-plus-d360' ),
+		'title'         => esc_attr__( 'ÚLTIMOS MICRORRELATOS', 'comments-widget-plus-d360' ),
 		'title_url'     => '',
 		'post_type'     => 'post',
 		'limit'         => 5,
@@ -25,7 +25,8 @@ function cwp_360_get_default_args() {
 		'excerpt'       => 0,
 		'excerpt_limit' => 50,
 		'css_class'     => '',
-        'cat_ID' => (isset($instance['cat_ID']) ? array_map('absint', $instance['cat_ID']) : array("0"))
+        'cat_ID'        => (isset($instance['cat_ID']) ? array_map('absint', $instance['cat_ID']) : array("0")),
+        'trend_walls'   => 5,
 	);
 
 	// Allow plugins/themes developer to filter the default arguments.
@@ -70,6 +71,8 @@ function cwp_360_get_recent_comments( $args, $id ) {
     $consulta = "SELECT DISTINCT(co.comment_ID), po.ID AS post_id, co.comment_author_email AS email, co.comment_author AS autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date FROM wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID JOIN wp_term_relationships term_relationships ON po.ID = term_relationships.object_id JOIN wp_term_taxonomy term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id WHERE co.comment_date > DATE_SUB(NOW(), INTERVAL 12 MONTH) AND cm.meta_key = 'wpdiscuz_votes' AND co.comment_approved = 1 ORDER BY co.comment_date DESC LIMIT 20";
     $comentarios = $wpdb->get_results($consulta);
     $html = '';
+
+    $html .= getPostsMasRecientesSegunCantidadComentarios($args);
 
     //Seteamos el user de wordpress en una variable de Javascript
     $html .= "<script> idUsuario = ".get_current_user_id().";</script>";
@@ -210,6 +213,32 @@ function getLinkTwitterShare($comentario){
     $share_link = 'https://twitter.com/intent/tweet?text=' . $title . ' ' . $link;
     return $share_link ;
 
+}
+
+function getPostsMasRecientesSegunCantidadComentarios($args) {
+    $argumentos = array(
+        'post_type'      => 'post',
+        'numberposts'	 => $args['trend_walls'],
+        'post_status'    => 'publish',
+        'orderby' 		 => 'comment_count',
+        'order' 		 => 'DESC'
+        );
+    print_r($args['trend_walls']);
+    $my_posts = get_posts( $argumentos );
+    $html_comments = '';
+    if ($my_posts) {
+        $html_comments .= '<h3>Tendencias</h3>';
+        $html_comments .= '<div id="trend-walls">';
+        foreach ($my_posts as $my_post) {
+            $html_comments .= '<div class="trend-wall">';
+            $html_comments .= '<a class="trend-walls-enlace" href="' . get_post_permalink($my_post->post_id) . '">' . $my_post->post_title . '</a>';
+            $html_comments .= '<div class="trend-walls-commentarios">' . $my_post->comment_count . ' comentarios</div>';
+            $html_comments .= '</div>';
+        }
+        $html_comments .= '</div>';
+    }
+
+    return $html_comments;
 }
 
 add_action( 'wp_ajax_nopriv_cwp_360_get_comments_ajax', 'cwp_360_get_comments_ajax' );

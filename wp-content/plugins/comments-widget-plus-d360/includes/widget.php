@@ -151,6 +151,7 @@ class Comments_Widget_Plus_Widget_D360 extends WP_Widget {
 		$instance['excerpt_limit'] = (int)( $new_instance['excerpt_limit'] );
 		$instance['css_class']     = sanitize_html_class( $new_instance['css_class'] );
 		$instance['cat_ID'] =  (isset($new_instance['cat_ID']) ? array_map( 'absint', $new_instance['cat_ID']) : array('0'));
+        $instance['trend_walls']   = (int)( $new_instance['trend_walls'] );
 
 		$this->flush_widget_cache();
 

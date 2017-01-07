@@ -59,6 +59,7 @@ function recargarPagina() {
     console.log("recargarPagina");
     console.log(consulta);
     peticionAjaxComentarios(consulta, false);
+    jQuery("html, body").animate({ scrollTop: 0 }, "slow");
 }
 
 jQuery('#siguiendo').click(function (){
