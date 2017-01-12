@@ -34,9 +34,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 	<ul class="cwp-360-tabs">
 		<li><a href="#tab-1"><?php _e( 'General', 'comments-widget-plus-d360' ); ?></a></li>
-		<li><a href="#tab-2"><?php _e( 'Comments', 'comments-widget-plus-d360' ); ?></a></li>
-		<li><a href="#tab-3"><?php _e( 'Avatar', 'comments-widget-plus-d360' ); ?></a></li>
-		<li><a href="#tab-4"><?php _e( 'Excerpt', 'comments-widget-plus-d360' ); ?></a></li>
+		<li style="display: none;"><a href="#tab-2"><?php _e( 'Comments', 'comments-widget-plus-d360' ); ?></a></li>
+		<li style="display: none;"><a href="#tab-3"><?php _e( 'Avatar', 'comments-widget-plus-d360' ); ?></a></li>
+		<li style="display: none;"><a href="#tab-4"><?php _e( 'Excerpt', 'comments-widget-plus-d360' ); ?></a></li>
 		<li><a href="#tab-5"><?php _e( 'Categories', 'comments-widget-plus-d360' ); ?></a></li>
 	</ul>
 
@@ -50,14 +50,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 			</p>
 
-			<p>
+			<p style="display: none;">
 				<label for="<?php echo $this->get_field_id( 'title_url' ); ?>">
 					<?php _e( 'Title URL', 'comments-widget-plus-d360' ); ?>
 				</label>
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title_url' ); ?>" name="<?php echo $this->get_field_name( 'title_url' ); ?>" type="text" value="<?php echo esc_url( $instance['title_url'] ); ?>" />
 			</p>
 
-			<p>
+			<p style="display: none;">
 				<label for="<?php echo $this->get_field_id( 'css_class' ); ?>">
 					<?php _e( 'CSS Class', 'comments-widget-plus-d360' ); ?>
 				</label>

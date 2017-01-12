@@ -13,8 +13,9 @@ var plantillaComentario = '<div class="card-1">' +
     '<div class="categoria">CATEGORIA</div>' +
     '</div>' +
     '<div>' +
-    '<div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><a href="HREFAUTOR"><div class="avatar2">AVATAR</div></a></div>' +
-    '<div id="contenido_NUMERO_COMENTARIO" onclick="desplegar(NUMERO_COMENTARIO3)" class="contenido">CONTENIDO_COMENTARIO</div>' +
+    //'<div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><a href="HREFAUTOR"><div class="avatar2">AVATAR</div></a></div>' +
+    'HREFAUTOR' +
+        '<div id="contenido_NUMERO_COMENTARIO" onclick="desplegar(NUMERO_COMENTARIO4, this)" href="HREF_POST" class="contenido">CONTENIDO_COMENTARIO</div>' +
     '</div>' +
 
     '<div>' +
@@ -23,7 +24,7 @@ var plantillaComentario = '<div class="card-1">' +
     '<div class="boton_social"><a target="_blank" href="ENLACE_TWITTER"><i class="fa fa-twitter" aria-hidden="true"></i></a></div>' +
     '</div>' +
     '<div class="botonera">' +
-    '<div class="boton" onclick="desplegar(NUMERO_COMENTARIO2)"><a>Leer <i class="fa fa-plus" aria-hidden="true"></i></a></div>' +
+    '<div class="boton" onclick="desplegarLeerMas(NUMERO_COMENTARIO2)"><a>Leer <i class="fa fa-plus" aria-hidden="true"></i></a></div>' +
     '<div class="boton"><a href="ENLACE">Continuarlo <i class="fa fa-commenting-o" aria-hidden="true"></i></a></div>' +
     '</div>' +
     '</div>' +
@@ -114,12 +115,12 @@ jQuery(document).ready( function (){
 
     filtros +=  '</div><div id="filtro_temporalidad_contenido" style="display:none">' +
         '<select id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
-        '<option selected="selected" value="1">Los más recientes</option>' +
+        '<option value="1">Los más recientes</option>' +
         '<option value="2">De la última semana</option>' +
         '<option value="3">Del último mes</option>' +
         '<option value="4">De los últimos 6 meses</option>' +
         '<option value="5">Del último año</option>' +
-        '<option value="6">Todos</option>' +
+        '<option selected="selected" value="6">Todos</option>' +
         '</select>' +
         '</div>' +
         '<div id="filtro_votos_contenido" style="display:none">' +
@@ -165,7 +166,6 @@ function getMoreComments(){
         jQuery('#spinner_comentarios').show();
         peticionAjaxComentarios(consulta, true);
     }
-
 }
 
 
@@ -407,9 +407,11 @@ function peticionAjaxComentarios(consulta, paginacion){
 
                     nuevoComentario = nuevoComentario.replace("TITULO", comments[i].titulo);
                     nuevoComentario = nuevoComentario.replace("CONTENIDO_COMENTARIO", contenido);
+                    nuevoComentario = nuevoComentario.replace("HREF_POST", comments[i].enlace_post_href);
                     nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO", numeroComentario);
                     nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO2", numeroComentario);
                     nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO3", numeroComentario);
+                    nuevoComentario = nuevoComentario.replace("NUMERO_COMENTARIO4", numeroComentario);
 
                     nuevoComentario = nuevoComentario.replace("AVATAR", comments[i].avatar);
                     nuevoComentario = nuevoComentario.replace("ENLACE", comments[i].enlace);

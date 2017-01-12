@@ -51,7 +51,9 @@ function cwp_360_get_recent_comments( $args, $id ) {
     wp_enqueue_style( 'estilos', trailingslashit( CWP_360_ASSETS ) . 'css/estilos.css' );
     wp_enqueue_script( 'filtros-script', trailingslashit( CWP_360_ASSETS ) . 'js/filtros.js' , array ( 'jquery' ), 1.5, true);
     wp_localize_script( 'filtros-script', 'MyAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
-    // declare the URL to the file that handles the AJAX request
+    wp_enqueue_script('media-upload');
+    wp_enqueue_script('thickbox');
+    wp_enqueue_style('thickbox');
 
     $categorias = get_categories();
     $categoriasFiltradas = array();
@@ -77,9 +79,90 @@ function cwp_360_get_recent_comments( $args, $id ) {
     //Seteamos el user de wordpress en una variable de Javascript
     $html .= "<script> idUsuario = ".get_current_user_id().";</script>";
 
-    $html .= "<script> var comentarios = new Array();
-    function desplegar(numero){ jQuery('#contenido_' + numero).html(comentarios[numero]);}
+    $html .= "
+    <style>
+        #TB_window{
+            border: 2px solid #a1a1a1;
+            padding: 15px;
+            border-radius: 25px;
+             -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
+        }
+
+        #TB_closeWindowButton{
+            margin-right:10px;
+        }
+
+    </style>
+    <script> 
+    var comentarios = new Array();
+    
+    function desplegar(numero, node){ 
+    
+        //Para pantalla pc o tablet mostramos popup
+        if(jQuery(window).width() > 1024){
+        
+            verElemento(node.getAttribute('href') + '&');
+            jQuery('iframe#TB_iframeContent').load(function(){
+
+                //Quitar header del popup
+                jQuery('#header_main', jQuery('#TB_iframeContent').contents()).remove();
+                
+                //Quitar los botones de navegacion entre posts
+                jQuery('a.avia-post-prev, a.avia-post-next', jQuery('#TB_iframeContent').contents()).remove();
+                
+                jQuery('a', jQuery('#TB_iframeContent').contents()).click(function(){
+                    top.window.location.href=jQuery(this).attr('href');
+                    return true;
+                });
+
+            });
+        }else{
+            //Para pantalla de movil simplemente desplegamos el comentario
+            jQuery('#contenido_' + numero).html(comentarios[numero]);
+        }
+        
+    }
+    
+    function mostrarPerfil(node){
+    
+        verElemento(node.getAttribute('dir') + '?');
+        
+        if(jQuery(window).width() < 1024){
+                   widthActual = jQuery('#TB_window').prop('style')['width'].slice(0,-2);
+                   jQuery('#TB_window').css('margin-left', widthActual * -0.5);
+            }
+
+        jQuery('iframe#TB_iframeContent').load(function(){
+
+            //Quitar header del popup
+            jQuery('#header_main', jQuery('#TB_iframeContent').contents()).remove();
+            
+            //Forzamos a que los enlaces del popup se abran sobre una pestanya nueva
+            jQuery('a', jQuery('#TB_iframeContent').contents()).click(function(){
+                top.window.location.href=jQuery(this).attr('href');
+                return true;
+            });
+        });
+        
+    }
+    
+    function verElemento(url){
+        url = url + \"TB_iframe=true&inlineId=my-content-id\"; 
+        tb_show(\" \", url);
+        
+        //Quitamos el texto de cerrar que se genera automaticamente sobre el popup
+        jQuery('#TB_closeWindowButton > span.screen-reader-text').remove();
+        
+        //Quitamos el boton de cerrar el modal
+        //jQuery('#TB_closeWindowButton').remove();
+    }
     </script>";
+
+
+    $html .= "<script> var comentarios = new Array();
+                function desplegarLeerMas(numero){ jQuery('#contenido_' + numero).html(comentarios[numero]);}
+            </script>";
 
     foreach ($comentarios as $comentario){
         $html .= "<script>comentarios.push(".json_encode($comentario->comment_content).");</script>";
@@ -131,8 +214,8 @@ function cwp_360_get_recent_comments( $args, $id ) {
         $html .= '<div class="titulo"><a href="'."../user/". get_comment_author_link( $comentario->comment_ID ).'">'.$comentario->autor.'</a> en <a href="'.get_post_permalink($comentario->post_id).'">'.get_the_title( $comentario->post_id ).'</a></div>';
         $html .= '<div class="categoria">'.'<a href="../'.remove_accents(strtolower($category_detail->name)).'">'.$category_detail->name.'</a></div>';
         $html .= "</div>";
-        $html .= '<div><a href="'."../user/".get_comment_author_link( $comentario->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comentario->email, $args['avatar_size'] ).'</div></div></a>';
-        $html .= '<div onclick="desplegar('.$numeroComentario.')" id="contenido_'.$numeroComentario.'" class="contenido">';
+        $html .= '<div><a onclick="mostrarPerfil(this)" dir="'.get_site_url()."/user/".get_comment_author_link( $comentario->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comentario->email, $args['avatar_size'] ).'</div></div></a>';
+        $html .= '<div onclick="desplegar('.$numeroComentario.', this)" id="contenido_'.$numeroComentario.'" href="'.get_post_permalink($comentario->post_id).'" class="contenido">';
 
         if (strlen($comentario->comment_content) > 250)
             $html .= substr($comentario->comment_content, 0, 250)."...";
@@ -148,13 +231,11 @@ function cwp_360_get_recent_comments( $args, $id ) {
                 $html .= '<div class="boton_social"><a target="_blank" href="'.getLinkFacebookShare($comentario).'"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></div>';
                 $html .= '<div class="boton_social"><a target="_blank" href="'.getLinkTwitterShare($comentario).'"><i class="fa fa-twitter" aria-hidden="true"></i></a></div>';
             $html .= '</div>';
-
             $html .= '<div class="botonera">';
-
-                $html .= '<div class="boton" onclick="desplegar('.$numeroComentario.')"><a>Leer <i class="fa fa-plus" aria-hidden="true"></i></a></div>';
+                $html .= '<div class="boton" onclick="desplegarLeerMas('.$numeroComentario.')"><a>Leer <i class="fa fa-plus" aria-hidden="true"></i></a></div>';
                 $html .= '<div class="boton"><a href="'.esc_url( get_comment_link( $comentario->comment_ID )).'">Continuarlo <i class="fa fa-commenting-o" aria-hidden="true"></i></a></div>';
             $html .= '</div>';
-        $html .= "</div>";
+            $html .= "</div>";
         $html .= '</div>';
         $html .= '<div class="separator"></div>';
         $numeroComentario++;
@@ -162,6 +243,7 @@ function cwp_360_get_recent_comments( $args, $id ) {
 
     $html .= '</div><div id="spinner_comentarios" style="width: 100%; text-align:center; display:none; margin-top: 30px"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>';
     $html .= '<a href="#top" title="Desplazarse hacia arriba" id="cwp-scroll-top-link" aria-hidden="true" data-av_icon="" data-av_iconfont="entypo-fontello" class="cwp_avia_pop_class"><span class="avia_hidden_link_text">Desplazarse hacia arriba</span></a>';
+    $html .= '<?php add_thickbox(); ?><div class="popup_modal" id="my-content-id" style="display:none;"></div>';
 	// Allow devs to hook in stuff after the recent comments.
 	do_action( 'cwp_after_loop_' . $id );
 
@@ -223,7 +305,7 @@ function getPostsMasRecientesSegunCantidadComentarios($args) {
         'orderby' 		 => 'comment_count',
         'order' 		 => 'DESC'
         );
-    print_r($args['trend_walls']);
+
     $my_posts = get_posts( $argumentos );
     $html_comments = '';
     if ($my_posts) {
@@ -231,7 +313,7 @@ function getPostsMasRecientesSegunCantidadComentarios($args) {
         $html_comments .= '<div id="trend-walls">';
         foreach ($my_posts as $my_post) {
             $html_comments .= '<div class="trend-wall">';
-            $html_comments .= '<a class="trend-walls-enlace" href="' . get_post_permalink($my_post->post_id) . '">' . $my_post->post_title . '</a>';
+            $html_comments .= '<a class="trend-walls-enlace" href="' . get_post_permalink($my_post->ID) . '">' . $my_post->post_title . '</a>';
             $html_comments .= '<div class="trend-walls-commentarios">' . $my_post->comment_count . ' comentarios</div>';
             $html_comments .= '</div>';
         }
@@ -255,10 +337,13 @@ function cwp_360_get_comments_ajax()
         $comentario = new Comentario();
 
         $comentario->contenido = $comment->comment_content;
+        $comentario->enlace_post_href = get_post_permalink($comment->post_id);
         $comentario->avatar = get_avatar($comment->email, $args['avatar_size']);
         $comentario->enlace = esc_url(get_comment_link($comment->comment_ID));
-        $comentario->enlace_autor = "../user/" . get_comment_author_link($comment->comment_ID);
-        $comentario->titulo = '<a href="' . $comentario->enlace_autor . '">' . $comment->autor . '</a> en <a href="' . get_post_permalink($comment->post_id) . '">' . get_the_title($comment->post_id) . '</a>';
+        $comentario->enlace_autor = '<a onclick="mostrarPerfil(this)" dir="'.get_site_url()."/user/".get_comment_author_link( $comment->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comment->email, $args['avatar_size'] ).'</div></div></a>';
+        //$comentario->enlace_autor = "../user/" . get_comment_author_link($comment->comment_ID);
+        $enlace_autor = "../user/" . get_comment_author_link($comment->comment_ID);
+        $comentario->titulo = '<a href="' . $enlace_autor . '">' . $comment->autor . '</a> en <a href="' . get_post_permalink($comment->post_id) . '">' . get_the_title($comment->post_id) . '</a>';
         $comentario->enlace_facebook = getLinkFacebookShare($comment);
         $comentario->enlace_twitter = getLinkTwitterShare($comment);
         $category_detail = get_the_category($comment->post_id)[0];

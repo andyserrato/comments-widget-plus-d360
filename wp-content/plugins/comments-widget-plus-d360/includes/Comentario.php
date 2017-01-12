@@ -7,6 +7,7 @@ class Comentario
     public $avatar = null;
     public $enlace = null;
     public $enlace_post = null;
+    public $enlace_post_href = null;
     public $enlace_autor = null;
     public $enlace_facebook = null;
     public $enlace_twitter = null;
