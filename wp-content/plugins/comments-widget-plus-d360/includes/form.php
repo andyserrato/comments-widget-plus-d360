@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title_url' ); ?>" name="<?php echo $this->get_field_name( 'title_url' ); ?>" type="text" value="<?php echo esc_url( $instance['title_url'] ); ?>" />
 			</p>
 
-			<p style="display: none;">
+			<p>
 				<label for="<?php echo $this->get_field_id( 'css_class' ); ?>">
 					<?php _e( 'CSS Class', 'comments-widget-plus-d360' ); ?>
 				</label>

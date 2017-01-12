@@ -236,8 +236,20 @@
 #trend-walls {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+}
+
+#trend-wall-title {
+    font-weight: 200;
+}
+
+#cwp-widget-title {
+    font-weight: 300;
+    text-align: center;
 }
 
 .trend-walls-enlace {
     display: block;
 }
+
+

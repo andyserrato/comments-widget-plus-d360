@@ -24,7 +24,7 @@ function cwp_360_get_default_args() {
 		'avatar_type'   => 'rounded',
 		'excerpt'       => 0,
 		'excerpt_limit' => 50,
-		'css_class'     => '',
+		'css_class'     => 'cwp-titulo-widget',
         'cat_ID'        => (isset($instance['cat_ID']) ? array_map('absint', $instance['cat_ID']) : array("0")),
         'trend_walls'   => 5,
 	);
@@ -309,7 +309,8 @@ function getPostsMasRecientesSegunCantidadComentarios($args) {
     $my_posts = get_posts( $argumentos );
     $html_comments = '';
     if ($my_posts) {
-        $html_comments .= '<h3>Tendencias</h3>';
+        $html_comments .= '<h1 id="cwp-widget-title">ÚLTIMOS MICRORRELATOS</h1>';
+        $html_comments .= '<h3 id="trend-wall-title">Tendencias</h3>';
         $html_comments .= '<div id="trend-walls">';
         foreach ($my_posts as $my_post) {
             $html_comments .= '<div class="trend-wall">';
