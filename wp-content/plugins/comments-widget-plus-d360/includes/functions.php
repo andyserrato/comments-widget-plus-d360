@@ -310,7 +310,7 @@ function getPostsMasRecientesSegunCantidadComentarios($args) {
     $html_comments = '';
     if ($my_posts) {
         $html_comments .= '<h1 id="cwp-widget-title">ÚLTIMOS MICRORRELATOS</h1>';
-        $html_comments .= '<h3 id="trend-wall-title">Tendencias</h3>';
+        //$html_comments .= '<h3 id="trend-wall-title">Tendencias</h3>';
         $html_comments .= '<div id="trend-walls">';
         foreach ($my_posts as $my_post) {
             $html_comments .= '<div class="trend-wall">';
