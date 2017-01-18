@@ -3,20 +3,89 @@
 
 }
 
+#general{
+	overflow:hidden;
+            text-align: center;
+            margin:auto;
+}
 #boton_filtrar{
-    float: right; width: 100px; height: 40px; padding: 7px; margin-bottom: 5px;
+    float: right; width: 60px; height: 0px; margin-bottom: 5px;
+	border-radius: 0px 4px 4px 0px; padding: 4px 10px;
+	background-color: #75447C !important;
+	color: #fff;
+	display:inline-table;
+
+}
+#icono_filtrar{
+	float: right; margin-bottom: 5px; 
+	color:#75447C !important;
+	border-radius: 4px 0px 0px 4px; padding: 3px 7px;
+	border-color:#75447C !important;
+	border: 1px solid ;
+	background-color: #fff !important;
+	color: #fff;
+	display:inline-table;
+	cursor: pointer;
+}
+#icono_filtrar:hover{
+	border-color:#603966 !important;
+	 cursor: pointer;
+}
+#icono_filtrar:focus{
+	border-color:#603966 !important;
+}
+#boton_filtrar:hover{
+    background-color: #603966 !important;
+    cursor: pointer;
 }
 
-#boton_filtrar:hover{
-    background-color: #f2f2f2;
-    cursor: pointer;
+#boton_filtrar:focus{
+background-color: #603966 !important;
 }
 
 #container_boton_submit{
     margin-top: 15px;
     width: 100%;
 }
+.icono {
+	border: 1px solid ;
+	width: 24px !important; height: 23px;
+	border-radius: 50%;
+	border-color: #75447c !important;
+	background-color: #fff !important;
+	width: 20%;
+}
+.icono:hover {
+	border: 1px solid ;
+	border-radius: 50%;
+	border-color: #fff !important;
+	width: 20%;
+}
+.focusFiltro{
+	cursor: pointer;
+}
+.focusFiltro:hover {
+	background-color: #75447c !important;
 
+}
+
+input[type="checkbox"] {
+    opacity: 0 !important;
+	cursor:pointer;
+	
+}
+input[type="checkbox"] + label  {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-4px 4px 0 -18px;
+    vertical-align:middle;
+    background:url(../images/check_radio_sheet.png) left top no-repeat;
+    cursor:pointer;
+}
+input[type="checkbox"]:checked + label  {
+    background:url(../images/check_radio_sheet.png) -19px top no-repeat;
+}
 #boton_submit{
     background-color: #f6f6f6;
     border: none;
@@ -29,10 +98,12 @@
     border: 1px solid #f8f8f8;
     cursor:pointer;
     width: 100%;
+border-bottom: solid #75447C;
 }
 
 #boton_submit:hover {
     border: 1px solid #CCC;
+border-bottom: solid #75447C;
 }
 
 .card-1 {

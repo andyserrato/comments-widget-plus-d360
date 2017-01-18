@@ -175,9 +175,13 @@ function cwp_360_get_recent_comments( $args, $id ) {
     }
 
 
-    $html .= '<div style="margin-top:10px;"><div id="cwp_sticky" style="text-align:center" ><div id="boton_filtrar">
-                                        <i class="fa fa-filter" aria-hidden="true"> FILTRAR</i>
-                                        </div></div>
+    $html .= '<div style="margin-top:10px;"><div id="cwp_sticky" style="text-align:center" >
+				
+			<div id="general">
+				<div id="boton_filtrar">Filtrar</div>
+				<div id="icono_filtrar"> <i class="fa fa-filter" aria-hidden="true"> </i>
+				</div>
+			</div></div>
                 <div id="contenedor_filtros">';
 
         //Fonts Awesome
@@ -185,10 +189,10 @@ function cwp_360_get_recent_comments( $args, $id ) {
 
         $html .= '<table>';
             $html .= '<tr>';
-               $html .= '<td align="center" id="filtro_categorias"><i class="fa fa-tags" aria-hidden="true"></i></td>';
-               $html .= '<td align="center" id="filtro_temporal"><i class="fa fa-calendar" aria-hidden="true"></i></td>';
-               $html .= '<td align="center" id="filtro_votos"><i class="fa fa-thumbs-up" aria-hidden="true"></i></td>';
-               $html .= '<td align="center" id="filtro_followers"><i class="fa fa-users" aria-hidden="true"></i></td>';
+               $html .= '<td  class="focusFiltro" align="center" id="filtro_categorias"><div id="circuloContenido" class="icono"><i id="iconoContenido" class="fa fa-tags" aria-hidden="true"></i></div></td>';
+               $html .= '<td  class="focusFiltro" align="center" id="filtro_temporal"><div id="circuloTemporal" class="icono"><i id="iconoTemporal" class="fa fa-calendar" aria-hidden="true"></i></div></td>';
+               $html .= '<td  class="focusFiltro" align="center" id="filtro_votos"><div id="circuloVotos" class="icono"><i id="iconoVotos" class="fa fa-thumbs-up" aria-hidden="true"></i></div></td>';
+               $html .= '<td  class="focusFiltro" align="center" id="filtro_followers"><div id="circuloFollower" class="icono"><i id="iconoFollower" class="fa fa-users" aria-hidden="true"></i></div></td>';
             $html .= '</tr>';
 
             $html .= '<tr id="fila_filtros" style="display: none;">';

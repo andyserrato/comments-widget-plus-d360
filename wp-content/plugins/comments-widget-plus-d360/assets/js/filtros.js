@@ -48,6 +48,7 @@ var errorConsultaAjax = '<div class="consulta_error" style="width: 100%; display
 
 function recargarPagina() {
     jQuery('#boton_filtrar').hide();
+	jQuery('#icono_filtrar').hide();
     jQuery('#spinner_comentarios').show();
     jQuery('.consulta_error').remove();
 
@@ -89,9 +90,43 @@ jQuery('#boton_filtrar').click(function (){
         jQuery('#contenedor_filtros').show();
         jQuery('#boton_filtrar').css('background-color', "#f2f2f2");
         filtrosDesplegados = true;
+		jQuery("#fila_filtros").show();
+		jQuery('#filtro_categorias_contenido').show();
+
+		jQuery('#filtro_categorias').css('background-color', "#75447C");
+		jQuery('#filtro_temporal').css('background-color', "#f6f6f6");
+		jQuery('#filtro_votos').css('background-color', "#f6f6f6");
+		jQuery('#filtro_followers').css('background-color', "#f6f6f6");
+		
+		jQuery('#filtro_temporalidad_contenido').hide();
+		jQuery('#filtro_votos_contenido').hide();
+		jQuery('#filtro_followers_contenido').hide();
     }
 });
+jQuery('#icono_filtrar').click(function (){
 
+    if (filtrosDesplegados) {
+        jQuery('#contenedor_filtros').hide();
+        
+        filtrosDesplegados = false;
+    }else {
+        jQuery('#contenedor_filtros').show();
+		
+        
+        filtrosDesplegados = true;
+		jQuery("#fila_filtros").show();
+		jQuery('#filtro_categorias_contenido').show();
+		
+		jQuery('#filtro_categorias').css('background-color', "#75447C");
+		jQuery('#filtro_temporal').css('background-color', "#f6f6f6");
+		jQuery('#filtro_votos').css('background-color', "#f6f6f6");
+		jQuery('#filtro_followers').css('background-color', "#f6f6f6");
+		
+		jQuery('#filtro_temporalidad_contenido').hide();
+		jQuery('#filtro_votos_contenido').hide();
+		jQuery('#filtro_followers_contenido').hide();
+    }
+});
 jQuery('#boton_cerrar_filtros').click(function (){
     jQuery('#contenedor_filtros').hide();
 });
@@ -102,35 +137,43 @@ jQuery(document).ready( function (){
     jQuery('.avatar2 img').addClass("avatar");
 
     //Insertamos los filtros
-    filtros = '<div id="filtro_categorias_contenido" style="display:none">';
-
+        filtros = '<div id="filtro_categorias_contenido" style="display: none;"><div style="display: table;>"<div style="display: table-row;">';
     for (i = 0; i < categoriasJS.length; i++){
-        if (i == 0){
-            filtros += '<div style="margin-top: 15px;display: inline-block"><input class="checkbox_categoria" type="checkbox" checked value="' + categoriasJS[i].id + '"/>' + categoriasJS[i].nombre + '</div>';
-        }else{
-            filtros += '<div style="margin-top: 15px;display: inline-block"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/>' + categoriasJS[i].nombre + '</div>';
-        }
-    }
+       if (i == 0){
+			
+            filtros += '<div style="margin-top: 5px;margin-right:50px;"><input class="checkbox_categoria" type="checkbox" checked value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
+			filtros += '<div style="display: table-cell;"></div>';
+		}else{
+			if ( i == 4 || i == 7) {
+				 filtros += '<div style="display: table-cell;"></div>';
+			}
+            filtros += '<div style="margin-top: 5px;margin-right:30px;"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
+	   }
+}
 
 
-    filtros +=  '</div><div id="filtro_temporalidad_contenido" style="display:none">' +
-        '<select id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
-        '<option value="1">Los más recientes</option>' +
-        '<option value="2">De la última semana</option>' +
-        '<option value="3">Del último mes</option>' +
-        '<option value="4">De los últimos 6 meses</option>' +
-        '<option value="5">Del último año</option>' +
-        '<option selected="selected" value="6">Todos</option>' +
-        '</select>' +
-        '</div>' +
-        '<div id="filtro_votos_contenido" style="display:none">' +
-        '<input class="checkbox_general" id="mas_votados" type="checkbox"/>Más votados' +
-        '<input class="checkbox_general" id="menos_votados" type="checkbox"/>Menos votados' +
-        '</div>'+
-        '<div id="filtro_followers_contenido" style="display:none">' +
-        '<input class="checkbox_general" id="siguiendo" type="checkbox"/>Siguiendo' +
-        '<input class="checkbox_general" id="no_siguiendo" type="checkbox"/>No Siguiendo' +
-        '</div>' + botonSubmitFiltros;
+      filtros +=  '</div></div></div><div id="filtro_temporalidad_contenido" style="margin-top: 5px;display:none">' +
+                                        '<select  id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
+                                            '<option selected="selected" value="1">Los más recientes</option>' +
+                                            '<option value="2">De la última semana</option>' +
+                                            '<option value="3">Del último mes</option>' +
+                                            '<option value="4">De los últimos 6 meses</option>' +
+                                            '<option value="5">Del último año</option>' +
+                                            '<option value="6">Todos</option>' +
+                                        '</select>' +
+                                    '</div>' +
+
+
+                                    '<div id="filtro_votos_contenido" style="margin-top: 5px;display:none">' +
+                                        '<input class="checkbox_general" id="mas_votados" type="checkbox"/><label></label>Más votados<span style="margin-right:20px;"></span>' +
+                                        '<input class="checkbox_general" id="menos_votados" type="checkbox"/><label></label>Menos votados' +
+                                    '</div>'+
+
+                                    '<div id="filtro_followers_contenido" style="margin-top: 5px;display:none">' +
+                                        '<input class="checkbox_general" id="siguiendo" type="checkbox"/><label></label>Siguiendo <span style="margin-right:20px;"></span>' +
+                                        '<input class="checkbox_general" id="no_siguiendo" type="checkbox"/><label></label>No Siguiendo' +
+                                    '</div>' + botonSubmitFiltros;
+
 
     jQuery('#filtros_contenido').html(filtros);
 
@@ -186,19 +229,30 @@ jQuery("#filtro_categorias").click(function(){
     jQuery("#fila_filtros").show();
 
     jQuery('#filtro_categorias_contenido').show();
+    jQuery('#circuloContenido').show(); 
+	jQuery('#iconoContenido').show(); 
     jQuery('#filtro_temporalidad_contenido').hide();
     jQuery('#filtro_votos_contenido').hide();
     jQuery('#filtro_followers_contenido').hide();
+		jQuery('#filtro_categorias').css('background-color', "#75447C");
+		jQuery('#filtro_temporal').css('background-color', "#f6f6f6");
+		jQuery('#filtro_votos').css('background-color', "#f6f6f6");
+		jQuery('#filtro_followers').css('background-color', "#f6f6f6");
 
 });
 
 jQuery("#filtro_temporal").click(function(){
     jQuery("#fila_filtros").show();
+jQuery('.icono').css('background-color', "#fff");
 
     jQuery('#filtro_categorias_contenido').hide();
     jQuery('#filtro_temporalidad_contenido').show();
     jQuery('#filtro_votos_contenido').hide();
     jQuery('#filtro_followers_contenido').hide();
+	jQuery('#filtro_categorias').css('background-color', "#f6f6f6");
+	jQuery('#filtro_temporal').css('background-color', "#75447C");
+	jQuery('#filtro_votos').css('background-color', "#f6f6f6");
+	jQuery('#filtro_followers').css('background-color', "#f6f6f6");
 
 });
 
@@ -209,6 +263,10 @@ jQuery("#filtro_votos").click(function(){
     jQuery('#filtro_temporalidad_contenido').hide();
     jQuery('#filtro_votos_contenido').show();
     jQuery('#filtro_followers_contenido').hide();
+	jQuery('#filtro_categorias').css('background-color', "#f6f6f6");
+	jQuery('#filtro_temporal').css('background-color', "#f6f6f6");
+	jQuery('#filtro_votos').css('background-color', "#75447C");
+	jQuery('#filtro_followers').css('background-color', "#f6f6f6");
 
 });
 
@@ -219,6 +277,11 @@ jQuery("#filtro_followers").click(function(){
     jQuery('#filtro_temporalidad_contenido').hide();
     jQuery('#filtro_votos_contenido').hide();
     jQuery('#filtro_followers_contenido').show();
+	
+	jQuery('#filtro_categorias').css('background-color', "#f6f6f6");
+	jQuery('#filtro_temporal').css('background-color', "#f6f6f6");
+	jQuery('#filtro_votos').css('background-color', "#f6f6f6");
+	jQuery('#filtro_followers').css('background-color', "#75447C");
 
 });
 
@@ -226,6 +289,7 @@ function setButtonListener(){
     jQuery('#boton_submit').click(function () {
         jQuery('#contenedor_filtros').hide();
         jQuery('#boton_filtrar').hide();
+		jQuery('#icono_filtrar').hide();
         jQuery('#spinner_comentarios').show();
         jQuery('#contenido').hide();
 
@@ -442,6 +506,7 @@ function peticionAjaxComentarios(consulta, paginacion){
                 estaPidiendo = false;
                 jQuery('#spinner_comentarios').hide();
                 jQuery('#boton_filtrar').show();
+				jQuery('#icono_filtrar').show();
                 jQuery('#contenido').show();
 
                 numeroPagina++;
@@ -458,6 +523,7 @@ function peticionAjaxComentarios(consulta, paginacion){
 
                 jQuery('#spinner_comentarios').hide();
                 jQuery('#boton_filtrar').show();
+				jQuery('#icono_filtrar').show();
                 jQuery('#contenido').show();
             }
 
@@ -472,6 +538,7 @@ function peticionAjaxComentarios(consulta, paginacion){
             jQuery('#contenido').html(errorConsultaAjax);
             jQuery('#spinner_comentarios').hide();
             jQuery('#boton_filtrar').show();
+			jQuery('#icono_filtrar').show();
             jQuery('#contenido').show();
         }
     });
