@@ -119,7 +119,8 @@ function cwp_360_get_recent_comments( $args, $id ) {
             });
         }else{
             //Para pantalla de movil simplemente desplegamos el comentario
-            jQuery('#contenido_' + numero).html(comentarios[numero]);
+            //jQuery('#contenido_' + numero).html(comentarios[numero]);
+            window.location.href = node.getAttribute('href');
         }
         
     }
@@ -127,10 +128,13 @@ function cwp_360_get_recent_comments( $args, $id ) {
     function mostrarPerfil(node){
     
         verElemento(node.getAttribute('dir') + '?');
-        
-        if(jQuery(window).width() < 1024){
+        // para pc
+        if(jQuery(window).width() > 1024){
                    widthActual = jQuery('#TB_window').prop('style')['width'].slice(0,-2);
                    jQuery('#TB_window').css('margin-left', widthActual * -0.5);
+            }
+            else { // para movil
+                
             }
 
         jQuery('iframe#TB_iframeContent').load(function(){
@@ -218,7 +222,8 @@ function cwp_360_get_recent_comments( $args, $id ) {
         $html .= '<div class="titulo"><a href="'."../user/". get_comment_author_link( $comentario->comment_ID ).'">'.$comentario->autor.'</a> en <a href="'.get_post_permalink($comentario->post_id).'">'.get_the_title( $comentario->post_id ).'</a></div>';
         $html .= '<div class="categoria">'.'<a href="../'.remove_accents(strtolower($category_detail->name)).'">'.$category_detail->name.'</a></div>';
         $html .= "</div>";
-        $html .= '<div><a onclick="mostrarPerfil(this)" dir="'.get_site_url()."/user/".get_comment_author_link( $comentario->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comentario->email, $args['avatar_size'] ).'</div></div></a>';
+        //$html .= '<div><a onclick="mostrarPerfil(this)" dir="'.get_site_url()."/user/".get_comment_author_link( $comentario->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comentario->email, $args['avatar_size'] ).'</div></div></a>';
+        $html .= '<div><a href="'.get_site_url()."/user/".get_comment_author_link( $comentario->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comentario->email, $args['avatar_size'] ).'</div></div></a>';
         $html .= '<div onclick="desplegar('.$numeroComentario.', this)" id="contenido_'.$numeroComentario.'" href="'.get_post_permalink($comentario->post_id).'" class="contenido">';
 
         if (strlen($comentario->comment_content) > 250)
@@ -350,7 +355,8 @@ function cwp_360_get_comments_ajax()
         $comentario->enlace_post_href = get_post_permalink($comment->post_id);
         $comentario->avatar = get_avatar($comment->email, $args['avatar_size']);
         $comentario->enlace = esc_url(get_comment_link($comment->comment_ID));
-        $comentario->enlace_autor = '<a onclick="mostrarPerfil(this)" dir="'.get_site_url()."/user/".get_comment_author_link( $comment->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comment->email, $args['avatar_size'] ).'</div></div></a>';
+        $comentario->enlace_autor = '<a href="'.get_site_url()."/user/".get_comment_author_link( $comment->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comment->email, $args['avatar_size'] ).'</div></div></a>';
+        //$comentario->enlace_autor = '<a onclick="mostrarPerfil(this)" dir="'.get_site_url()."/user/".get_comment_author_link( $comment->comment_ID ).'"><div style="height: 100%; vertical-align: top; display: inline-block" class="contenedor_avatar"><div class="avatar2">'.get_avatar( $comment->email, $args['avatar_size'] ).'</div></div></a>';
         //$comentario->enlace_autor = "../user/" . get_comment_author_link($comment->comment_ID);
         $enlace_autor = "../user/" . get_comment_author_link($comment->comment_ID);
         $comentario->titulo = '<a href="' . $enlace_autor . '">' . $comment->autor . '</a> en <a href="' . get_post_permalink($comment->post_id) . '">' . get_the_title($comment->post_id) . '</a>';

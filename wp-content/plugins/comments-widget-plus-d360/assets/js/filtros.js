@@ -137,29 +137,29 @@ jQuery(document).ready( function (){
     jQuery('.avatar2 img').addClass("avatar");
 
     //Insertamos los filtros
-        filtros = '<div id="filtro_categorias_contenido" style="display: none;"><div style="display: table;>"<div style="display: table-row;">';
+        filtros = '<div id="filtro_categorias_contenido" style="display: none;"><div style="display: table;width:100%;>"<div style="display: table-row;">';
     for (i = 0; i < categoriasJS.length; i++){
        if (i == 0){
 			
-            filtros += '<div style="margin-top: 5px;margin-right:50px;"><input class="checkbox_categoria" type="checkbox" checked value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
+            filtros += '<div style="margin-top: 5px;margin-right:5%;"><input class="checkbox_categoria" type="checkbox" checked value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
 			filtros += '<div style="display: table-cell;"></div>';
 		}else{
 			if ( i == 4 || i == 7) {
 				 filtros += '<div style="display: table-cell;"></div>';
 			}
-            filtros += '<div style="margin-top: 5px;margin-right:30px;"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
+            filtros += '<div style="margin-top: 5px;"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
 	   }
 }
 
 
       filtros +=  '</div></div></div><div id="filtro_temporalidad_contenido" style="margin-top: 5px;display:none">' +
                                         '<select  id="temporalidad" name="temporalidad" style="margin-bottom: 0px">' +
-                                            '<option selected="selected" value="1">Los más recientes</option>' +
+                                            '<option value="1">Los más recientes</option>' +
                                             '<option value="2">De la última semana</option>' +
                                             '<option value="3">Del último mes</option>' +
                                             '<option value="4">De los últimos 6 meses</option>' +
                                             '<option value="5">Del último año</option>' +
-                                            '<option value="6">Todos</option>' +
+                                            '<option selected="selected" value="6">Todos</option>' +
                                         '</select>' +
                                     '</div>' +
 
