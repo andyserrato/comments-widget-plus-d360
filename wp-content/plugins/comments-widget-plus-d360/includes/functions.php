@@ -307,21 +307,26 @@ function getPostsMasRecientesSegunCantidadComentarios($args) {
         'numberposts'	 => $args['trend_walls'],
         'post_status'    => 'publish',
         'orderby' 		 => 'comment_count',
-        'order' 		 => 'DESC'
+        'order' 		 => 'DESC',
+        'date_query' => array(
+            'after' => date('Y-m-d', strtotime('-180 days'))
+        )
         );
 
     $my_posts = get_posts( $argumentos );
     $html_comments = '';
     if ($my_posts) {
         $html_comments .= '<h1 id="cwp-widget-title">ÚLTIMOS MICRORRELATOS</h1>';
-        //$html_comments .= '<h3 id="trend-wall-title">Tendencias</h3>';
+        $html_comments .= '<div id="trend-wall-caja-grande">';
+        $html_comments .= '<h3 id="trend-wall-title">Wall Trends</h3>';
         $html_comments .= '<div id="trend-walls">';
         foreach ($my_posts as $my_post) {
             $html_comments .= '<div class="trend-wall">';
             $html_comments .= '<a class="trend-walls-enlace" href="' . get_post_permalink($my_post->ID) . '">' . $my_post->post_title . '</a>';
-            $html_comments .= '<div class="trend-walls-commentarios">' . $my_post->comment_count . ' comentarios</div>';
+            //$html_comments .= '<div class="trend-walls-commentarios">' . $my_post->comment_count . ' comentarios</div>';
             $html_comments .= '</div>';
         }
+        $html_comments .= '</div>';
         $html_comments .= '</div>';
     }
 
