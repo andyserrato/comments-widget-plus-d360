@@ -86,7 +86,7 @@ function cwp_360_get_recent_comments( $args, $id ) {
             padding: 15px;
             border-radius: 25px;
              -webkit-overflow-scrolling: touch;
-            overflow-y: scroll;
+            //overflow-y: scroll;
         }
 
         #TB_closeWindowButton{
@@ -111,6 +111,10 @@ function cwp_360_get_recent_comments( $args, $id ) {
                 //Quitar los botones de navegacion entre posts
                 jQuery('a.avia-post-prev, a.avia-post-next', jQuery('#TB_iframeContent').contents()).remove();
                 
+                jQuery('.sidebar', jQuery('#TB_iframeContent').contents()).remove();
+                jQuery('.content', jQuery('#TB_iframeContent').contents()).css('width', '100%');
+                jQuery('.template-blog', jQuery('#TB_iframeContent').contents()).css('margin-left', '-40px');
+                
                 jQuery('a', jQuery('#TB_iframeContent').contents()).click(function(){
                     top.window.location.href=jQuery(this).attr('href');
                     return true;
@@ -119,8 +123,8 @@ function cwp_360_get_recent_comments( $args, $id ) {
             });
         }else{
             //Para pantalla de movil simplemente desplegamos el comentario
-            //jQuery('#contenido_' + numero).html(comentarios[numero]);
-            window.location.href = node.getAttribute('href');
+            jQuery('#contenido_' + numero).html(comentarios[numero]);
+            //window.location.href = node.getAttribute('href');
         }
         
     }
@@ -314,14 +318,14 @@ function getPostsMasRecientesSegunCantidadComentarios($args) {
         'orderby' 		 => 'comment_count',
         'order' 		 => 'DESC',
         'date_query' => array(
-            'after' => date('Y-m-d', strtotime('-180 days'))
+            'after' => date('Y-m-d', strtotime('-5 days'))
         )
         );
 
     $my_posts = get_posts( $argumentos );
     $html_comments = '';
     if ($my_posts) {
-        $html_comments .= '<h1 id="cwp-widget-title">ÚLTIMOS MICRORRELATOS</h1>';
+        //$html_comments .= '<h1 id="cwp-widget-title">ÚLTIMOS MICRORRELATOS</h1>';
         $html_comments .= '<div id="trend-wall-caja-grande">';
         $html_comments .= '<h3 id="trend-wall-title">Wall Trends</h3>';
         $html_comments .= '<div id="trend-walls">';

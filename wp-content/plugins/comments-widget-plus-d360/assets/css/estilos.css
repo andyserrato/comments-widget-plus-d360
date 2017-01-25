@@ -324,6 +324,7 @@ border-bottom: solid #75447C;
 #trend-wall-caja-grande {
     /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);*/
     box-shadow: 0 2px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24), 0 1px 2px rgba(0,0,0,0.36), 0 1px 2px rgba(0, 0, 0, 0);
+    padding-top: 5px;
 }
 
 .trend-wall {

@@ -58,8 +58,8 @@ function recargarPagina() {
     numeroPagina = 1;
     estaPidiendo = false;
     consulta = consultaAnterior + " LIMIT 20";
-    console.log("recargarPagina");
-    console.log(consulta);
+    //console.log("recargarPagina");
+    //console.log(consulta);
     peticionAjaxComentarios(consulta, false);
     jQuery("html, body").animate({ scrollTop: 0 }, "slow");
 }
@@ -185,7 +185,7 @@ jQuery(document).ready( function (){
         if(jQuery(window).scrollTop() > 0) {
             scroll = jQuery(window).scrollTop();
             altoCuerpo = jQuery( '#contenido' ).height();
-            console.log("evento scroll" + (altoCuerpo - scroll));
+            //console.log("evento scroll" + (altoCuerpo - scroll));
 
             if (altoCuerpo - scroll < 320 && existenComentarios){
                 //Aqui cargamos mas comentarios
@@ -200,12 +200,12 @@ jQuery(document).ready( function (){
 
 function getMoreComments(){
     consulta = consultaAnterior + " LIMIT " + (numeroPagina * 20) + ", 20";
-    console.log("Pagina:" + numeroPagina);
+    //console.log("Pagina:" + numeroPagina);
 
     if (!estaPidiendo) {
         estaPidiendo = true;
         //Mostramos el spinner
-        console.log(consulta);
+        //console.log(consulta);
         jQuery('#spinner_comentarios').show();
         peticionAjaxComentarios(consulta, true);
     }
@@ -296,9 +296,9 @@ function setButtonListener(){
         jQuery('#boton_filtrar').css('background-color', "transparent");
 
         filtrosDesplegados = false;
-        console.log("submit");
+        //console.log("submit");
         //Vaciamos el array de comentarios
-        console.log(comentarios);
+        //console.log(comentarios);
 
         comentarios = [];
         numeroComentario = 0;
@@ -324,9 +324,9 @@ function setButtonListener(){
             masVotado = true;
         }
 
-        console.log('Temporalidad:' + temporalidad);
-        console.log('Siguendo:' + siguiendo);
-        console.log('Mas votado:' + masVotado);
+        //console.log('Temporalidad:' + temporalidad);
+        //console.log('Siguendo:' + siguiendo);
+        //console.log('Mas votado:' + masVotado);
 
 
         //consulta = "select distinct(co.comment_ID), po.ID as post_id, co.comment_author_email as email, co.comment_author as autor, co.comment_content, CONVERT(SUBSTRING_INDEX(cm.meta_value,\"-\",-1),UNSIGNED INTEGER) AS num_votos, co.comment_date from wp_comments co JOIN wp_posts po ON co.comment_post_ID = po.ID JOIN wp_postmeta pm ON po.ID = pm.post_id JOIN wp_commentmeta cm ON cm.comment_id = co.comment_ID WHERE 1 = 1 ";
@@ -392,7 +392,7 @@ function setButtonListener(){
         //alert(consulta);
         consulta += " LIMIT 20;";
 
-        console.log(consulta);
+        //console.log(consulta);
 
         peticionAjaxComentarios(consulta, false);
 
@@ -407,7 +407,7 @@ function setCheckboxCategoriasListeners(){
         checks[i].addEventListener("change", function(){
             checksChecked = jQuery('input:checkbox[class=checkbox_categoria]:checked');
 
-            console.log(checksChecked);
+            //console.log(checksChecked);
 
             if (checksChecked.length == 0){
                 checks[0].checked = true;
@@ -429,11 +429,11 @@ function setCheckboxCategoriasListeners(){
 
 function peticionAjaxComentarios(consulta, paginacion){
 
-    console.log("pido");
+    //console.log("pido");
     jQuery.ajax({
         // la URL para la petición
-        //url : "../wp-content/plugins/comments-widget-plus-d360/includes/get_comments.php",
-        url : MyAjax.ajaxurl,
+        url : "../wp-content/plugins/comments-widget-plus-d360/includes/get_comments.php",
+        //url : MyAjax.ajaxurl,
         //ajaxurl+"?action=get_comments_ajax",
 
         // la información a enviars
@@ -453,7 +453,7 @@ function peticionAjaxComentarios(consulta, paginacion){
             comments = JSON.parse(result);
             commentsHTML = "";
             //alert(result);
-            console.log(comments);
+            //console.log(comments);
             // si tenemos resultados
             if (typeof comments !== 'undefined' && comments.length > 0) {
                 existenComentarios = true;
@@ -487,10 +487,10 @@ function peticionAjaxComentarios(consulta, paginacion){
                     commentsHTML += nuevoComentario;
                     //Anyadimos el comentario al array de comentarios
                     comentarios.push(comments[i].contenido);
-                    console.log("anyado");
+                    //console.log("anyado");
 
                     numeroComentario++;
-                    //console.log(comentarios);
+                    ////console.log(comentarios);
                 }
 
 
@@ -510,7 +510,7 @@ function peticionAjaxComentarios(consulta, paginacion){
                 jQuery('#contenido').show();
 
                 numeroPagina++;
-                console.log(consulta);
+                //console.log(consulta);
             } else { // no hay resultados
                 estaPidiendo = false;
                 existenComentarios = false;
