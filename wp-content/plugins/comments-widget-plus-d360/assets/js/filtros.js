@@ -137,17 +137,21 @@ jQuery(document).ready( function (){
     jQuery('.avatar2 img').addClass("avatar");
 
     //Insertamos los filtros
-        filtros = '<div id="filtro_categorias_contenido" style="display: none;"><div style="display: table;width:100%;>"<div style="display: table-row;">';
+        filtros = '<div id="filtro_categorias_contenido" style="display: none;"><div style="display: table;width:100%;clear: both;>"<div style="display: table-row;">';
     for (i = 0; i < categoriasJS.length; i++){
        if (i == 0){
 			
-            filtros += '<div style="margin-top: 5px;margin-right:5%;"><input class="checkbox_categoria" type="checkbox" checked value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
-			filtros += '<div style="display: table-cell;"></div>';
+            filtros += '<div class="categoriaTDTotal"><input class="checkbox_categoria" type="checkbox" checked value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
+			filtros += '<div class="opciones_tabla">';
 		}else{
-			if ( i == 4 || i == 7) {
-				 filtros += '<div style="display: table-cell;"></div>';
+			if ( i == 3 || i == 6){
+			filtros += '<div class="categoriaTD"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div></div><div class="opciones_tabla">'
+			}else{
+            filtros += '<div class="categoriaTD"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
 			}
-            filtros += '<div style="margin-top: 5px;"><input class="checkbox_categoria" type="checkbox" value="' + categoriasJS[i].id + '"/><label></label>' + categoriasJS[i].nombre + '</div>';
+			if (i == 10){
+				filtros += '</div>';
+			}
 	   }
 }
 
@@ -159,7 +163,7 @@ jQuery(document).ready( function (){
                                             '<option value="3">Del último mes</option>' +
                                             '<option value="4">De los últimos 6 meses</option>' +
                                             '<option value="5">Del último año</option>' +
-                                            '<option selected="selected" value="6">Todos</option>' +
+                                            '<option selected="selected"  value="6">Todos</option>' +
                                         '</select>' +
                                     '</div>' +
 
@@ -200,7 +204,7 @@ jQuery(document).ready( function (){
 
 function getMoreComments(){
     consulta = consultaAnterior + " LIMIT " + (numeroPagina * 20) + ", 20";
-    //console.log("Pagina:" + numeroPagina);
+    console.log("Pagina:" + numeroPagina);
 
     if (!estaPidiendo) {
         estaPidiendo = true;
@@ -490,7 +494,7 @@ function peticionAjaxComentarios(consulta, paginacion){
                     //console.log("anyado");
 
                     numeroComentario++;
-                    ////console.log(comentarios);
+                    //console.log(comentarios);
                 }
 
 

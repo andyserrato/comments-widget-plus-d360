@@ -5,9 +5,33 @@
 
 #general{
 	overflow:hidden;
-            text-align: center;
-            margin:auto;
+    text-align: center;
+           
 }
+
+
+.categoriaTDTotal{ margin-top: 5px !important;margin-right:5% !important; display: table-header-group !important; }
+
+.categoriaTD { margin-top: 5px !important;  }
+
+@media only screen and (max-width: 320px) {
+
+   .categoriaTD { font-size: 1em !important;  }
+   
+   .categoriaTDTotal { font-size: 1em !important; }
+   
+   .opciones_tabla { font-size: 1em !important; }
+   
+   input[type="checkbox"] + label  {
+ 
+    margin:0px 0px 0px 0px !important;
+	 display:block !important;
+	}
+	.checkbox_categoria{
+    margin-top: 0px !important;
+}
+}
+
 #boton_filtrar{
     float: right; width: 60px; height: 0px; margin-bottom: 5px;
 	border-radius: 0px 4px 4px 0px; padding: 4px 10px;
@@ -47,6 +71,14 @@ background-color: #603966 !important;
     margin-top: 15px;
     width: 100%;
 }
+
+
+.opciones_tabla {
+	display: table-cell;
+	vertical-align: middle;
+	
+}
+
 .icono {
 	border: 1px solid ;
 	width: 24px !important; height: 23px;
@@ -82,6 +114,7 @@ input[type="checkbox"] + label  {
     vertical-align:middle;
     background:url(../images/check_radio_sheet.png) left top no-repeat;
     cursor:pointer;
+
 }
 input[type="checkbox"]:checked + label  {
     background:url(../images/check_radio_sheet.png) -19px top no-repeat;
@@ -344,4 +377,22 @@ border-bottom: solid #75447C;
     text-align: center;
 }
 
+@keyframes spinner_puto {
+    to {transform: rotate(360deg);}
+}
 
+.spinner_puto:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border-top: 2px solid #07d;
+    border-right: 2px solid transparent;
+    animation: spinner_puto .6s linear infinite;
+}

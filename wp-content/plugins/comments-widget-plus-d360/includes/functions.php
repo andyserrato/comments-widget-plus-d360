@@ -88,6 +88,10 @@ function cwp_360_get_recent_comments( $args, $id ) {
              -webkit-overflow-scrolling: touch;
             //overflow-y: scroll;
         }
+        
+        #TB_iframeContent{
+            display: none;   
+        }
 
         #TB_closeWindowButton{
             margin-right:10px;
@@ -101,10 +105,14 @@ function cwp_360_get_recent_comments( $args, $id ) {
     
         //Para pantalla pc o tablet mostramos popup
         if(jQuery(window).width() > 1024){
-        
+            
+            
+            
+            console.log('spinner_puto');
             verElemento(node.getAttribute('href') + '&');
+            jQuery('div#TB_window').ready(function(){ console.log('putas y barcos');jQuery('#TB_window').addClass('spinner_puto');});
+                        
             jQuery('iframe#TB_iframeContent').load(function(){
-
                 //Quitar header del popup
                 jQuery('#header_main', jQuery('#TB_iframeContent').contents()).remove();
                 
@@ -119,6 +127,9 @@ function cwp_360_get_recent_comments( $args, $id ) {
                     top.window.location.href=jQuery(this).attr('href');
                     return true;
                 });
+                
+                jQuery('#TB_window').removeClass('spinner_puto');
+                jQuery('iframe#TB_iframeContent').css('display', 'initial');
 
             });
         }else{
