@@ -104,11 +104,8 @@ function cwp_360_get_recent_comments( $args, $id ) {
     function desplegar(numero, node){ 
     
         //Para pantalla pc o tablet mostramos popup
-        if(jQuery(window).width() > 1024){
-            
-            
-            
-            console.log('spinner_puto');
+        if(jQuery(window).width() > 1024){  
+            //console.log('spinner_puto');
             verElemento(node.getAttribute('href') + '&');
             jQuery('div#TB_window').ready(function(){ console.log('putas y barcos');jQuery('#TB_window').addClass('spinner_puto');});
                         
